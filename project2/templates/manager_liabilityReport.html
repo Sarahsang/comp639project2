@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<div class="main-container">
+    <div class="LR-containerREPORT" style="height:75px; display:flex; flex-direction:column; ">
+        <h1 style="margin:10px auto; color:#242250; font-weight: 900; text-align: center; ">Annual Leave Liability Reports</h1>
+    </div>
+    <div class="search-container" style="margin:50px auto; text-align: center;">
+        <input type="text" id="search_name" onkeyup="search_any_field()" placeholder="Search by name..">
+        <a style="text-align: center;" href="/dashboard?id={{session.id}}" class="customizedButton">Back to Dashboard</a>
+    </div>
+    <div style="margin-top:-30px;">
+        <div style="width:77%; margin-left:120px;"
+            <div class="LR-container" style="height:auto;width:50%; display:flex; align-items: center;justify-content:space-around; background-color: white;box-shadow: none; border: 1px solid rgb(214, 214, 214); overflow:auto; ">
+                <div style="width:150%; display:flex; flex-direction:column; ">
+                    <table class="table" id="myTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Position</th>
+                                <th>Department Name</th>
+                                <th>Leave Balance (Days) </th>
+                                <th>Leave Balance (Hours)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for e in leaveLiabilityReports%}
+                            <tr>
+                                <td><a class="button-action centered-link" href="/manager/myDRdetail?id={{e[0]}}">{{e[1]}}.{{e[2]}} {{e[3]}}</td>
+                                <td><a class="button-action centered-link"  href="/orgchart">{{e[4]}}</td>
+                                <td>{{e[5]}}</td>
+                                <td><a class="button-action centered-link"
+                                    href="/manager/myDRLeaveBalance?id={{e[0]}}">{{e[7]}} Days</td>
+                                <td><a class="button-action centered-link"
+                                    href="/manager/myDRLeaveBalance?id={{e[0]}}">{{e[6]}} Hours</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+        <!-- script to set up search by name for employees directly reporting to you as an approval manager -->
+        <script>
+            function search_any_field() {
+                // Declare variables 
+                var input_1, filter_1, table, tr, td, i, txtValue;
+                input_1 = document.getElementById("search_name");
+                filter_1 = input_1.value.toUpperCase();
+
+                table = document.getElementById("myTable");
+                tr = table.getElementsByTagName("tr");
+
+                // Loop through all table rows, and hide those who don't match the search query
+                for (i = 0; i < tr.length; i++) {
+                    td_1 = tr[i].getElementsByTagName("td")[0];
+
+                    if (td_1) {
+                        txtValue_1 = td_1.textContent || td_1.innerText;
+                        if (txtValue_1.toUpperCase().indexOf(filter_1) > -1) {
+                            tr[i].style.display = "";
+
+                        } else {
+                            tr[i].style.display = "none";
+                        }
+                    }
+                }
+            }
+
+            function search_name() {
+                // Declare variables 
+                var input, filter, table, tr, td, i, txtValue;
+                input = document.getElementById("search_name");
+                filter = input.value.toUpperCase();
+                table = document.getElementById("myTable");
+                tr = table.getElementsByTagName("tr");
+
+                // Loop through all table rows, and hide those who don't match the search query
+                for (i = 0; i < tr.length; i++) {
+                    td = tr[i].getElementsByTagName("td")[1];
+                    if (td) {
+                        txtValue = td.textContent || td.innerText;
+                        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                            tr[i].style.display = "";
+                        } else {
+                            tr[i].style.display = "none";
+                        }
+                    }
+                }
+            }
+
+        </script>
+        {% endblock %}

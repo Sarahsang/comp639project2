@@ -1,0 +1,129 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div  class="LR-container"  style="height:75px; display:flex; flex-direction:column; " >
+    <h1 style="margin:10px auto; color:#242250; font-weight: 900; ">My Details</h1>
+    <div style="margin:-10px auto;color:#2D49E8;font-weight: bold;" >
+        <span>{{detail[2]}}</span>
+        <span>{{detail[3]}}</span>
+    </div>
+</div>
+<div style="margin-top:-30px;">
+    <div style="width:120%;" >
+        <div  class="LR-container"  style="display:flex; align-items: center;justify-content:space-around; font-size:14px; width:50%;height:35px;color:black;margin-bottom: -50px;" >
+            <p style="margin-top:12px;">Basic Info</p>
+        </div>
+        <div  class="LR-container"  style="height:auto;width:50%; display:flex; align-items: center;justify-content:space-around; font-size:14px; background-color: white;box-shadow: none; border: 1px solid rgb(214, 214, 214);" >
+            <div style="width:70%; display:flex; flex-direction:column; ">
+                <div style="text-align: left;" >Employee ID: <span style="color:#2D49E8; font-size: 14px; font-weight: 400;" >{{detail[0]}}</span></div> 
+                <div style="text-align: left;">Email: <span style="color:#2D49E8; font-size: 14px; font-weight: 400;" >{{detail[4]}}</span></div>
+                <div style="text-align: left;">Join Date: <span style="color:#2D49E8; font-size: 14px; font-weight: 400;" >{{detail[5]}}</span></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div style="margin-top:-30px;">
+    <div style="width:120%;" >
+        <div  class="LR-container"  style="display:flex; align-items: center;justify-content:space-around; font-size:14px; width:50%;height:35px;color:black;margin-bottom: -50px;" >
+            <p style="margin-top:12px;">Role</p>
+        </div>
+        <div  class="LR-container"  style="height:auto;width:50%; display:flex; align-items: center;justify-content:space-around; font-size:14px; background-color: white;box-shadow: none; border: 1px solid rgb(214, 214, 214);" >
+            <div style="width:70%; display:flex; flex-direction:column; ">
+                <div style="text-align: left;" >Department: <span style="color:#2D49E8; font-size: 14px; font-weight: 400;" >{{detail[8]}}</span></div> 
+                <div style="text-align: left;">Title: <span style="color:#2D49E8; font-size: 14px; font-weight: 400;" >{{detail[6]}}</span></div>
+                <div style="text-align: left;">Position Start Date: <span style="color:#2D49E8; font-size: 14px; font-weight: 400;" >{{detail[7]}}</span></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div style="margin-top:-30px;">
+    <div style="width:120%;" >
+        <div  class="LR-container"  style="display:flex; align-items: center;justify-content:space-around; font-size:14px; width:50%;height:35px;color:black;margin-bottom: -50px;" >
+            <p style="margin-top:12px;">Report To</p>
+            <p style="margin-top:12px;">Approval Manager</p>
+        </div>
+        <div  class="LR-container"  style="height:auto;width:50%; display:flex; align-items: center;justify-content:space-around; font-size:14px; background-color: white;box-shadow: none; border: 1px solid rgb(214, 214, 214);" >
+            <div style="width:50%; display:flex; flex-direction:column; ">
+                <div style="text-align: center;" ><span style="color:#2D49E8; font-size: 14px; font-weight: 400;" >{{detail[10]}} {{detail[11]}}</span></div> 
+                <div style="text-align: center;"><span style="color:#2D49E8; font-size: 14px; font-weight: 400;" >{{detail[12]}}</span></div>
+            </div>
+            <div style="width:50%; display:flex; flex-direction:column; ">
+                <div style="text-align: center;" ><span style="color:#2D49E8; font-size: 14px; font-weight: 400;" >{{detail[14]}} {{detail[15]}}</span></div> 
+                <div style="text-align: center;"><span style="color:#2D49E8; font-size: 14px; font-weight: 400;" >{{detail[16]}}</span></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="margin:50px auto; text-align: center;">
+    <div>
+        <a  style="margin-right:20px;" onclick="history.back()" class="customizedButton">Back</a>
+        <a  href="/changePassword?id={{session.id}}" style="margin-left:20px;"  class="customizedButton">Change Password</a>
+    </div>
+   
+</div>
+<br>
+<br>
+<div  class="LR-container"  style="height:75px; display:flex; flex-direction:column; " >
+    <h1 style="margin:10px auto; color:#242250; font-weight: 900; ">My Organization Chart</h1>
+    <div style="margin:-10px auto;color:#2D49E8;font-weight: bold;" >
+        <span></span>
+        <span></span>
+    </div>
+</div>
+<div style="margin-top:-30px;">
+    <div style="width:120%;" >
+        <div  class="LR-container"  style="display:flex; align-items: center;justify-content:space-around; font-size:14px; width:50%;height:35px;color:black;margin-bottom: -50px;" >
+            <p style="margin-top:12px;">Manager</p>
+        </div>
+
+        <div  class="LR-container"  style="height:auto;width:50%; display:flex; align-items: center;justify-content:space-around; font-size:14px; background-color: white;box-shadow: none; border: 1px solid rgb(214, 214, 214);" >
+            <div style="width:70%; display:flex; flex-direction:column; ">
+                {% for manager in manager_list %}
+                <div style="text-align: center;"><span style="color:#2D49E8; font-size: 14px; font-weight: 400;" >{{allemployee_orgchart_dict[manager][8]}}</span></div>
+                <div style="text-align: center;" ><span style="color:#2D49E8; font-size: 14px; font-weight: 400;" >{{allemployee_orgchart_dict[manager][3]}}. {{allemployee_orgchart_dict[manager][4]}}  {{allemployee_orgchart_dict[manager][5]}}</span></div> 
+                <div style="text-align: center;">Email: <span style="color:#2D49E8; font-size: 14px; font-weight: 400;" >{{allemployee_orgchart_dict[manager][6]}}</span></div>
+                <div style="text-align: center;">|</div>
+                {% endfor %}
+
+                <div style="text-align: center;">My Direct Report</div>
+                {% for directreport in directreport_manager %}
+                <div style="text-align: center;"><span style="color:#2D49E8; font-size: 14px; font-weight: 400;" >{{directreport[8]}}</span></div>
+                <div style="text-align: center;" ><span style="color:#2D49E8; font-size: 14px; font-weight: 400;" >{{directreport[3]}}. {{directreport[4]}}  {{directreport[5]}}</span></div> 
+                <div style="text-align: center;">Email: <span style="color:#2D49E8; font-size: 14px; font-weight: 400;" >{{directreport[6]}}</span></div>
+                {% endfor %}
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+<div style="margin-top:-30px;">
+    <div style="width:120%;" >
+        <div  class="LR-container"  style="display:flex; align-items: center;justify-content:space-around; font-size:14px; width:50%;height:35px;color:black;margin-bottom: -50px;" >
+            <p style="margin-top:12px;">Supervisor</p>
+        </div>
+        <div  class="LR-container"  style="height:auto;width:50%; display:flex; align-items: center;justify-content:space-around; font-size:14px; background-color: white;box-shadow: none; border: 1px solid rgb(214, 214, 214);" >
+            <div style="width:70%; display:flex; flex-direction:column; ">
+                {% for supervisor in supervisor_list %}
+                <div style="text-align: center;"><span style="color:#2D49E8; font-size: 14px; font-weight: 400;" >{{allemployee_orgchart_dict[supervisor][8]}}</span></div>
+                <div style="text-align: center;" ><span style="color:#2D49E8; font-size: 14px; font-weight: 400;" >{{allemployee_orgchart_dict[supervisor][3]}}. {{allemployee_orgchart_dict[supervisor][4]}}  {{allemployee_orgchart_dict[supervisor][5]}}</span></div> 
+                <div style="text-align: center;">Email: <span style="color:#2D49E8; font-size: 14px; font-weight: 400;" >{{allemployee_orgchart_dict[supervisor][6]}}</span></div>
+                <div style="text-align: center;">|</div>
+                {% endfor %}
+                <div style="text-align: center;">My Direct Report</div>
+                {% for directreport in directreport_supervisor %}
+                <div style="text-align: center;"><span style="color:#2D49E8; font-size: 14px; font-weight: 400;" >{{directreport[8]}}</span></div>
+                <div style="text-align: center;" ><span style="color:#2D49E8; font-size: 14px; font-weight: 400;" >{{directreport[3]}}. {{directreport[4]}}  {{directreport[5]}}</span></div> 
+                <div style="text-align: center;">Email: <span style="color:#2D49E8; font-size: 14px; font-weight: 400;" >{{directreport[6]}}</span></div>
+                {% endfor %}
+            </div>
+        </div>
+
+
+    </div>
+</div>
+
+{% endblock %}

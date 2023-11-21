@@ -1,0 +1,303 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<!-- This IF loop sets up the tabs for each role -->
+<div class="main-container">
+    {% if session['role_id'] == 3 %}
+    <h2  style="margin-top:30px;" class="box-title">Welcome, {{ user_name }}!</h2>
+    <div class="flex-container">
+      <div class="apply-leave">
+        <input type="button" onclick="location.href='/applyLeave';" value="Apply for Leave"/>
+      </div>
+    </div>
+    
+    {% elif session['role_id'] == 2 %}
+    <ul class="nav nav-tabs justify-content-end">
+      <li class="nav-item">
+        <a class="nav-link" aria-current="page" href="{{ url_for('request_log') }}">Request Log</a>
+
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/manager/myapproval">My Approval</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/manager/mydirectreports">My Direct Reports</a>
+      </li>
+      <li>
+        <div class="select-menu">
+        <div class="select-btn">
+          <span class="sBtn-text nav-link" style="border-radius:0;cursor:pointer;">Leave Reports<i class="fa fa-caret-down"></i></span>           
+        </div>
+        <ul class="options">
+          <li class="option">
+              <a href="/manager/liabilityReport?id={{session.id}}"><span class="option-text">Leave Liability Report</span></a>
+          </li>
+          <li class="option">
+            <a href="/manager/LeaveExceptionReport?id={{session.id}}"><span class="option-text">Leave Exception Report</span></a>
+          </li>
+        </ul>
+        </div>
+      </li>
+    </ul>
+
+    <h2 style="margin-top:30px;" class="box-title">Welcome, {{ user_name }}!</h2>
+    <p >You can approve or reject leave requests from employees.</p>
+    <div class="flex-container">
+      <div class="approval-table">
+        <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names..">
+          <table id="myTable">
+              <thead>
+                  <tr>
+                      <th>Date Requested</th>
+                      <th>Name</th>
+                      <th>Status</th>
+                      <th>Leave Type</th>
+                      <th>Start Date</th>
+                      <th>End Date</th>
+                      <th>Days Requested</th>
+                      <th>Hours Requested</th>
+                      <th>Annual Leave Balance(hr)</th>
+                      <th>Sick Leave Balance(hr)</th>
+                      <th>Action</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  {% for request in new_leave_requests %}
+                      <tr>
+                          <td>{{ request[0] }}</td>
+                          <td><a class="button-action centered-link" href="/manager/myDRdetail?id={{request[13]}}">{{ request[1] }} {{ request[2] }}</td>
+                          <td>{{ request[3] }}</td>
+                          <td>{{ request[4] }}</td>
+                          <td>{{ request[5] }}</td>
+                          <td>{{ request[6] }}</td> 
+                          <td>{{ request[7] }}</td>
+                          <td>{{ request[12] }}</td>
+                          <td>{{ request[8] }}</td>
+                          <td>{{ request[9] }}</td>
+                          <td>
+                            <a class="button-action" href="{{ url_for('view_request', request_id=request[10]) }}">View</a>
+                            {% if request[3] != 'approved' %}
+                              <form id="approveForm" method="POST" action="/approve_leave">
+                                <input type="hidden" name="request_id" value="{{ request[10] }}">
+                                <input type="hidden" name="manager_id" value="{{ request[11] }}">
+                                <button type="submit" class="button-action">Approve</button>
+                              </form>
+                            {% endif %}
+                        </td>
+                      </tr>
+                  {% endfor %}
+              </tbody>
+          </table>
+      </div>
+    </div>
+
+    {% else %}
+    <ul class="nav nav-tabs justify-content-end">
+      <li class="nav-item">
+        <a class="nav-link" aria-current="page" href="{{ url_for('request_log') }}">Request Log</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/manager/mydirectreports">My Direct Reports</a>
+      </li>
+      <li>
+        <div class="select-menu">
+          <div class="select-btn">
+            <span class="sBtn-text nav-link" style="border-radius:0; cursor:pointer;">Leave Reports<i class="fa fa-caret-down"></i></span>           
+          </div>
+          <ul class="options">
+            <li class="option">
+                <a href="/manager/liabilityReport?id={{session.id}}"><span class="option-text">Leave Liability Report</span></a>
+            </li>
+            <li class="option">
+              <a href="/manager/LeaveExceptionReport?id={{session.id}}"><span class="option-text">Leave Exception Report</span></a>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/admin/roles">Roles</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/admin/leaveTypes">Leave Types</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/admin_holiday?year=2023">Holidays</a>
+      </li>
+    </ul>
+
+    <h2 style="margin-top:30px;" class="box-title">Welcome {{ user_name }}!</h2>
+    <p>You have access to all features of the leave management system.</p>
+      <div class="flex-container">
+        <div class="approval-table">
+          <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names..">
+            <table id="myTable">
+                <thead>
+                    <tr>
+                        <th>Date Requested</th>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th>Leave Type</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Days Requested</th>
+                        <th>Hours Requested</th>
+                        <th>Annual Leave Balance(hr)</th>
+                        <th>Sick Leave Balance(hr)</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for request in new_leave_requests %}
+                        <tr>
+                            <td>{{ request[0] }}</td>
+                            <td><a class="button-action centered-link" href="/manager/myDRdetail?id={{request[11]}}">{{ request[1] }} {{ request[2] }}</td>
+                            <td>{{ request[3] }}</td>
+                            <td>{{ request[4] }}</td>
+                            <td>{{ request[5] }}</td>
+                            <td>{{ request[6] }}</td>
+                            <td>{{ request[7] }}</td>
+                            <td>{{ request[12] }}</td>
+                            <td>{{ request[8] }}</td>
+                            <td>{{ request[9] }}</td>
+                            <td>
+                              <a class="button-action" href="{{ url_for('view_request', request_id=request[10]) }}">View</a>
+                              {% if request[3] != 'approved' and request[11] != session['id'] %}
+                                <form id="approveForm" method="POST" action="/approve_leave">
+                                <input type="hidden" name="request_id" value="{{ request[10] }}">                                  
+                                <button type="submit" class="button-action">Approve</button>
+                                </form>
+                              {% endif %}
+                          </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+      </div>
+      <div class="update-balance " style="width:900px;">
+        <input class="dashboard-button" type="button" onclick="location.href='/admin/addbalance';" value="Update Leave Balance"/>
+      </div>
+      <div class="update-balance dashboard-button" style="width:900px;">
+        <input  class="dashboard-button" type="button" onclick="location.href='/sickleave';" value="Restore Sick Leave for emp on anniversary"/>
+      </div>
+      
+  {% endif %}
+
+    <div  class="LR-container"  style="margin-left:10px;width:80%;height:120px; display:flex; flex-direction:column; margin-bottom:40px;" >
+      <h1 style="margin:10px auto; color:#242250; font-weight: 900; ">My Leave Request Alerts</h1>
+      
+          <div   style="margin:2px auto;color:#242250; font-size:18px; font-weight: 900;font-weight: bold;">
+            <span class="fa fa-exclamation-circle" style="margin-right:10px;color:#2D49E8;"></span>You have<span style="color:#2D49E8;font-weight: bold;"> {{length}} </span>new
+            {%if length<=1 %}
+            alert 
+            {%else %}
+            alerts
+            {%endif%} for the last month
+          </div>
+          <div style="margin:10px auto; "><button id="toggleButton" style="border-style:none;margin-right:10px;font-size:12px;" onclick="toggleDetails()">Click to show details</button><i class="fa fa-angle-down" aria-hidden="true"></i></div>
+
+    </div>
+
+      <div id="details" class="LR-container detail" style=" margin-left:10px; width:80%; margin-bottom:50px;height:auto; display:flex; align-items: center;justify-content:space-around; background-color: white;box-shadow: none; border: 1px solid rgb(214, 214, 214); overflow:auto; display:none;">
+            <div style="width:100%; display:flex; flex-direction:column; ">
+              <table class="table" style="border: none !important;margin-top: 30px; margin-bottom:30px;">
+                  <tr style=" background-color: #2b4ae7;color: white;font-weight: 800;">
+                    <th style="border: none">Checked</th><th style="border: none">Date Updated</th><th style="border: none">Status</th><th style="border: none">Type</th>
+                      <th style="border: none">Start Day</th><th style="border: none">End Day</th>
+                      <th style="border: none">Comments</th>
+                      <th style="border: none">Days Requested</th>
+                  </tr> 
+                  {% for leaveRequest in new_approval %}                 
+                  <tr style=" background-color: #f2f2f4;">
+                      <td style="border: none" class="delete-row"><i class="far fa-circle"></i></td> 
+                      <td style="border: none">{{leaveRequest[13]}}</td>
+                      {%if leaveRequest[11]== "Approved"%}
+                      <td style="border: none"><span style="color:#2D49E8; font-size: 16px; font-weight: 400;" >{{leaveRequest[11]}}</span></td>  
+                      {%elif leaveRequest[11]== "Rejected"%}
+                      <td style="border: none"><span style="color:#9d1c27; font-size: 16px; font-weight: 400;" >{{leaveRequest[11]}}</span></td>  
+                      {%endif%}
+                      <td style="border: none">{{leaveRequest[4]}}</td>
+                      <td style="border: none">{{leaveRequest[5]}}</td>
+                      <td style="border: none">{{leaveRequest[6]}}</td>
+                      {%if leaveRequest[11]== "Approved"%}   
+                      <td style="border: none">{{leaveRequest[10]}}</td>
+                      {%elif leaveRequest[11]== "Rejected"%}
+                      <td style="border: none">{{leaveRequest[17]}}</td>
+                      {%endif%} 
+                      <td style="border: none">{{leaveRequest[12]}}</td> 
+                                          
+                  </tr>      
+                  {% endfor %}     
+              </table>         
+            </div>
+    </div>
+
+</div>
+<script>
+
+  function toggleDetails(event) {
+      var detailsDiv = document.getElementById("details");
+      var toggleButton = document.getElementById("toggleButton");
+      var icon = document.getElementById("icon");
+      if (detailsDiv.style.display === "none") {
+        detailsDiv.style.display = "block";
+        toggleButton.textContent = "Click to hide";
+        icon.classList.add("fa fa-angle-up"); 
+      } else {
+        detailsDiv.style.display = "none";
+        toggleButton.textContent = "Click to show details";
+        icon.classList.remove("fa fa-angle-up");
+      }
+    }
+      // Function to handle click on delete row icon
+function handleDeleteRow(event) {
+  const row = event.target.closest('tr');
+  row.remove();
+}
+// Attach click event listeners to delete row icons
+const deleteIcons = document.querySelectorAll('.delete-row i');
+deleteIcons.forEach((icon) => {
+  icon.addEventListener('click', handleDeleteRow);
+});
+
+
+const optionMenu = document.querySelector(".select-menu"),
+       selectBtn = optionMenu.querySelector(".select-btn"),
+       options = optionMenu.querySelectorAll(".option"),
+       sBtn_text = optionMenu.querySelector(".sBtn-text");
+
+selectBtn.addEventListener("click", () => optionMenu.classList.toggle("active"));       
+
+options.forEach(option =>{
+    option.addEventListener("click", ()=>{
+        let selectedOption = option.querySelector(".option-text").innerText;
+    
+        optionMenu.classList.remove("active");
+    })
+});
+
+
+
+//search bar
+function myFunction() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[1];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }       
+  }
+}
+</script>
+        
+        
+{% endblock %}

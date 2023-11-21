@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div  class="LR-container"  style="height:55px; display:flex; flex-direction:column; " >
+    <h1 style="margin:10px auto; color:#242250; font-weight: 900; ">My Leave Requests</h1>       
+    </div>
+</div>
+
+<div style="margin-top:-30px;">
+    <div style="width:120%;" >
+        <div  class="LR-container"  style="display:flex; align-items: center;justify-content:space-around; font-size:14px; width:50%;height:35px;color:black;margin-bottom: -50px;" >
+            <form method="POST" action="/leaveRequests">
+                <label for="status">Filter by status:</label>
+                <select name="status" style="margin-left:5px;" id="status">
+                  <option value="">All</option>
+                  <option value="Approved">Approved</option>
+                  <option value="Pending Approval">Pending Approval</option>
+                  <option value="Rejected">Rejected</option>
+                  <option value="Cancelled">Cancelled</option>
+                  <option value="Draft">Draft</option>
+                </select>
+                <button type="submit" class="PB-button">Filter</button>
+              </form>       
+        </div>
+
+        <div class="LR-container"
+            style="height:auto;width:50%; display:flex; align-items: center;justify-content:space-around; background-color: white;box-shadow: none; border: 1px solid rgb(214, 214, 214); overflow:auto; ">
+            <div style="width:100%; display:flex; flex-direction:column; ">
+            <table class="table" style="margin-top: 30px; margin-bottom:30px;">
+                <tr>
+                    <th>Date Requested</th><th>Status</th><th>Type</th>
+                    <th>Start Day</th><th>End Day</th>
+                    <th>Comments</th>
+                    <th>Days Requested</th><th>Action</th>
+                </tr>
+                {% if leaveRequestsStatus %}  
+                {% for leaveRequest in leaveRequestsStatus %}                    
+                <tr>
+                    <td>{{leaveRequest[13]}}</td>
+                    <td>{{leaveRequest[11]}}</td>        
+                    <td>{{leaveRequest[4]}}</td>
+                    <td>{{leaveRequest[5]}}</td>
+                    <td>{{leaveRequest[6]}}</td>   
+                    <td>{{leaveRequest[10]}}</td>
+                    <td>{{leaveRequest[12]}}</td>
+                    {% if (leaveRequest[11] == 'Pending Approval') or (leaveRequest[11] == 'Draft') %}
+                    <td><a class="button-action centered-link" href="/applyLeave?uid={{session.id}}&rid={{leaveRequest[14]}}&type={{leaveRequest[4]}}&start={{leaveRequest[15]}}&end={{leaveRequest[16]}}&edit=1&purl={{request.url}}">Edit</a>  <a class="button-action centered-link" href="/leaveRequests?uid={{session.id}}&rid={{leaveRequest[14]}}&withdraw=1">Withdraw</a></td>
+                    {% else %}
+                    <td></td>  
+                    {% endif %}                        
+                </tr>      
+                {% endfor %} 
+                {% else %} 
+                {% for leaveRequest in leaveRequests %}                   
+                    <tr>
+                        <td>{{leaveRequest[13]}}</td>
+                        <td>{{leaveRequest[11]}}</td>            
+                        <td>{{leaveRequest[4]}}</td>
+                        <td>{{leaveRequest[5]}}</td>
+                        <td>{{leaveRequest[6]}}</td>   
+                        <td>{{leaveRequest[10]}}</td>
+                        <td>{{leaveRequest[12]}}</td>
+                        {% if (leaveRequest[11] == 'Pending Approval') or (leaveRequest[11] == 'Draft') %}
+                        <td><a class="button-action centered-link" href="/applyLeave?uid={{session.id}}&rid={{leaveRequest[14]}}&type={{leaveRequest[4]}}&start={{leaveRequest[15]}}&end={{leaveRequest[16]}}&edit=1&purl={{request.url}}">Edit</a>  <a class="button-action centered-link" href="/leaveRequests?uid={{session.id}}&rid={{leaveRequest[14]}}&withdraw=1">Withdraw</a></td>
+                        {% else %}
+                        <td></td>  
+                        {% endif %}                        
+                    </tr>      
+                {% endfor %} 
+                {% endif %}                
+            </table>  
+        </div>        
+        </div>
+    </div>
+
+    <div style="margin:50px auto; text-align: center;">
+                <div>
+                    <a  style="margin-right:20px;" href="/dashboard?id={{session.id}}" class="customizedButton">Back to Dashboard</a>
+                    <a style="margin-right:20px;" href="/applyLeave" class="customizedButton">Apply for Leave</a>
+                    <a href="/currentLeaveBalance?id={{session.id}}" class="customizedButton">Current Leave Balance</a>
+                </div>
+    </div>
+   
+</div>
+<script>
+$(document).ready(function() {
+    // Function to check the status of each row
+    function checkStatus() {
+      $('.status-cell').each(function() {
+        var status = $(this).text().trim();
+        if (status === 'Approved') {
+          // Display a pop-up message for the approved request
+          alert('Your leave request has been approved!');
+        }
+      });
+    }
+  
+    // Call the function to start checking the status at regular intervals
+    setInterval(checkStatus, 5000); // Check every 5 seconds
+  });
+</script>
+{% endblock %}
+

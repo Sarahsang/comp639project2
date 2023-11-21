@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="main-container">
+
+    <div  class="LR-containerREPORT"  style="height:75px; width:80%; display:flex; flex-direction:column; " >
+        <h1 style="margin: auto; color:#242250; font-weight: 900; ">My Direct Reports Leave Request Log</h1>
+    </div>
+    <div style="margin:20px auto; text-align: center;">
+        <div>
+            <a style="margin-right:10px;" onclick="history.back()" class="customizedButton">Back</a>
+        </div>
+    </div>
+    <div style="margin-top:-30px;">
+        <div style="width:140%;" >
+            <div  class="LR-containerREPORT"  style="height:auto;width:60%; display:flex; align-items: center;justify-content:space-around; background-color: white;box-shadow: none; border: 1px solid rgb(214, 214, 214); overflow:auto; " >
+                <div style="width:100%; display:flex; flex-direction:column; align-items: center;">
+                    <table id="myTable">
+                        <thead>
+                            <tr>
+                                <th>Date Requested</th>
+                                <th>Employees' Name</th>
+                                <th>Status</th>
+                                <th>Leave Type</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Days Requested</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for request in request_log_employee %}
+                                <tr>
+                                    <td>{{ request[0] }}</td>
+                                    <td>{{ request[1] }} {{ request[2] }}</td>
+                                    <td>{{ request[3] }}</td>
+                                    <td>{{ request[4] }}</td>
+                                    <td>{{ request[5] }}</td>
+                                    <td>{{ request[6] }}</td>
+                                    <td>{{ request[7] }}</td>
+                                    <td>
+                                    <a class="button-action" href="{{ url_for('view_request', request_id=request[10]) }}">View</a>
+                                    {% if request[3] != 'approved' and request[12] == 0 %}
+                                        <form id="approveForm" method="POST" action="/approve_leave">
+                                            <input type="hidden" name="request_id" value="{{ request[10] }}">
+                                            <input type="hidden" name="manager_id" value="{{ request[11] }}">
+                                            <button type="submit" class="button-action">Approve</button>
+                                        </form>
+                                    {% endif %}
+                                </td>
+                                </tr>
+                                {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

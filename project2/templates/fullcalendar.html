@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+    .Weekend {
+        color: grey;
+    }
+    .Holiday {
+        color: orange;
+    }
+    .Available{
+        color: green;
+    }
+    .date{
+        font-size:medium;
+    }
+    
+</style>
+
+<div class="LR-container">
+    <br>
+    <br>
+    <table>
+        {% for e in emp_dict %}
+            {% if loop.index == 1 %}
+                <tr>
+                    <th></th>
+                    {% for day in dept_leaverequest_dict[e] %}
+                        <th><div class="date">{{day[0]}}</div></th>
+                    {% endfor %}
+                </tr>
+            {% endif %}
+        <tr>
+            <td><div class="names">{{emp_dict[e][2]}} {{emp_dict[e][3]}}</div></td>
+            {% for day in dept_leaverequest_dict[e] %}
+                <td><div class="{{day[3]}}">{{day[3]}}</div></td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+
+    </table>
+</div>
+
+
+
+{% endblock %}

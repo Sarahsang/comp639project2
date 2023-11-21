@@ -1,0 +1,189 @@
+{% extends "base.html" %} 
+{% block title %} Confirm leave request {% endblock %} 
+{% block content %}
+<div style="height:250px; padding-top:25px;" class="confirm LR-container " id="confirm" >
+        <div style="flex-direction:column;"><p style="text-align:center;font-size:24px; color:#242250; font-weight: 300; ">You are applying 
+            <span style="color:#2D49E8; font-size: 32px; font-weight: 500;" >{{leaveDays[0][0]}}</span> 
+            Days ( or <span style="color:#2D49E8; font-size: 32px; font-weight: 500;" >{{leaveHours}}</span> Hours ) of {{leaveTypes}} Leave</p> </div>
+        {% if  leaveTypes=="Annual" %}
+            {% if  payroll_day <= end__Date %}
+            <div style="flex-direction:column;"><p style="font-size:24px; text-align:center; color:#242250; font-weight: 300; ">Your projected Annual leave balance of
+            {% else %}
+            <div style="flex-direction:column;"><p style="font-size:24px; text-align:center; color:#242250; font-weight: 300; ">Your Annual leave balance of
+            {%endif%}
+            <span style="color:#2D49E8; font-size: 24px; font-weight: 400;" >{{projected_date}}</span> is 
+            <span style="color:#2D49E8; font-size: 24px; font-weight: 400;" >({{estimated_days}}</span> days or 
+            <span style="color:#2D49E8; font-size: 24px; font-weight: 400;" >{{estimated_hours}}</span> hours) 
+            .</p></div>
+            
+        {% elif  leaveTypes=="Sick" or leaveTypes=="Sick Family" %}
+        <div style="flex-direction:column;"><p style="font-size:24px; text-align:center; color:#242250; font-weight: 300; ">Your sick leave balance at close of last pay is 
+            <span style="color:#2D49E8; font-size: 24px; font-weight: 400;" >({{sickDaysDisplay}}</span> days or 
+            <span style="color:#2D49E8; font-size: 24px; font-weight: 400;" >{{leaveBalance[4]}}</span> hours) 
+            .</p></div>
+
+        {% else %}
+        <div style="flex-direction:column;"><p style="font-size:24px; text-align:center; color:#242250; font-weight: 300; ">You do not have any balance for this leave type
+            .</p></div>
+        {%endif%}
+
+        <div style="flex-direction:column;"><P style=" text-align:center; font-size:18px; margin:2px auto; color:#242250; font-weight: 300; ">Are you sure you want to submit?</P></div>
+        <div style="margin-top:160px;  margin-left:220px; text-align: center;">
+            <div style="display:flex;" >
+                <form method="POST" action="/leaveSubmit">
+                    <input hidden name="request_uid" value="{{request_uid}}">
+                    <input hidden name="edit_mode_input" value="{{edit_mode}}">
+                    <input hidden name="edit_rid" value="{{edit_rid}}">
+                    <input hidden name="previous_url" value="{{previous_url}}">
+                    
+                    <input type="hidden" name="startDate" value="{{startDate}}">
+                    <input type="hidden" name="endDate" value="{{endDate}}">
+                    <input type="hidden" name="leaveDays" value="{{leaveDays}}">
+                    <input type="hidden" name="leaveTypes" value="{{leaveTypes}}">
+                    <input type="hidden" name="comments" value="{{comments}}">
+                    {% if edit_mode == "1" %}
+                    <button  type="submit" style="border-style:none; margin-right:20px;" href="/leaveSubmit?id={{request_uid}}&purl={{previous_url}}" class="customizedButton">Yes, Please</button>
+                </form> 
+               
+                    {% else %}
+                    <button  type="submit" style="border-style:none; margin-right:20px;" href="/leaveSubmit?id={{session.id}}" class="customizedButton">Yes, Please</button>
+                </form> 
+                <a style="margin-right:20px;" href="/applyLeave?id={{session.id}}" class="customizedButton">No, Thanks</a>
+                    {% endif %}
+                
+                <a  onclick="history.back()" class="customizedButton">Back</a>
+            </div>
+        </div>
+</div>
+
+<div  style="height:260px;padding-top:25px;"  class="LR-container" id="myAlertSick">
+    <p style="text-align:center; font-size:24px; margin:20px auto; color:#242250; font-weight: 300; ">You are applying 
+            <span style="color:#2D49E8; font-size: 32px; font-weight: 500;" >{{leaveDays[0][0]}}</span> 
+            Days ( or <span style="color:#2D49E8; font-size: 32px; font-weight: 500;" >{{leaveHours}}</span> Hours ) of {{leaveTypes}} Leave</p>
+    <p style="font-size:24px; text-align:center; color:#242250; font-weight: 300; ">The selected duration exceeds your sick leave balance at close of last pay, 
+        <span style="color:#2D49E8; font-size: 24px; font-weight: 400;" >({{sickDaysDisplay}}</span> days or 
+        <span style="color:#2D49E8; font-size: 24px; font-weight: 400;" >{{leaveBalance[4]}}</span> hours) .</p>
+    <div style="flex-direction:column;"><P style=" text-align:center; font-size:18px; margin:2px auto; color:#242250; font-weight: 300; ">Do you want to apply again?</P></div>
+    <div style="margin-top:80px; margin-left:80x; text-align: center;">
+        <div>
+            <a style="margin-right:20px;" onclick="history.back()" class="customizedButton">Apply again</a>
+            <a style="margin-right:20px;" href="/dashboard?id={{session.id}}" class="customizedButton">Back to Dashboard</a>
+        </div>
+    </div>
+</div>
+
+<div style="height:260px;padding-top:25px;" class="LR-container" id="myAlertAnnual">
+    <p style="text-align:center;font-size:24px; margin:20px auto; color:#242250; font-weight: 300; ">You are applying 
+            <span style="color:#2D49E8; font-size: 32px; font-weight: 500;" >{{leaveDays[0][0]}}</span> 
+            Days ( or <span style="color:#2D49E8; font-size: 32px; font-weight: 500;" >{{leaveHours}}</span> Hours ) of {{leaveTypes}} Leave</p>
+        {% if  payroll_day <= end__Date %}
+        <p style="text-align:center; font-size:24px; text-align:center; color:#242250; font-weight: 300; ">The selected duration exceeds your projected annual leave balance of
+        {%else%}
+        <p style="text-align:center; font-size:24px; text-align:center; color:#242250; font-weight: 300; ">The selected duration exceeds your annual leave balance of
+        {%endif%}
+        <span style="color:#2D49E8; font-size: 24px; font-weight: 400;" >{{projected_date}}</span>
+        <span style="color:#2D49E8; font-size: 24px; font-weight: 400;" >({{estimated_days}}</span> days or 
+        <span style="color:#2D49E8; font-size: 24px; font-weight: 400;" >{{estimated_hours}}</span> hours) 
+        .</p>
+
+    <div style="flex-direction:column;"><P style=" text-align:center; font-size:18px; margin:2px auto; color:#242250; font-weight: 300; ">Do you want to apply again?</P></div>
+    <div style="margin-top:80px; margin-left:80x; text-align: center;">
+        <div>
+            <a style="margin-right:20px;" onclick="history.back()" class="customizedButton">Apply again</a>
+            <a style="margin-right:20px;" href="/dashboard?id={{session.id}}" class="customizedButton">Back to Dashboard</a>
+        </div>
+    </div>
+</div>
+
+<div class="LR-container" style="height:200px;padding-top:25px;flex-direction:column;"  id="myAlertOverlap">
+    <p style="text-align:center;font-size:24px; margin:20px auto; color:#242250; font-weight: 300; "> The dates you are applying from
+        <span style="color:#2D49E8; font-size: 24px; font-weight: 400;" >{{startDate}}</span> to
+        <span style="color:#2D49E8; font-size: 24px; font-weight: 400;" >{{endDate}}</span>
+        overlap with another leave request. 
+        .</p>
+    <div style="flex-direction:column;"><P style=" text-align:center; font-size:18px; margin:2px auto; color:#242250; font-weight: 300; ">Do you want to apply again?</P></div>
+    <div style="margin-top:80px; margin-left:80x; text-align: center;">
+        <div>
+            <a style="margin-right:20px;" onclick="history.back()" class="customizedButton">Apply again</a>
+            <a style="margin-right:20px;" href="/dashboard?id={{session.id}}" class="customizedButton">Back to Dashboard</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    /* js to display confirm page or alert page */
+    function showAlert() {
+    document.getElementById("myAlert").style.display = "block";
+    }
+
+    function hideAlert() {
+    document.getElementById("myAlert").style.display = "none";
+    }
+    var sickDaysDisplay="{{sickDaysDisplay}}";
+    var AnnualDaysDisplay="{{AnnualDaysDisplay}}";
+    var  leaveDays="{{ leaveDays[0][0]}}";
+    var leaveTypes="{{leaveTypes}}";
+    var estimated_days="{{estimated_days}}"
+    var projected_date="{{projected_date}}";
+    var requestsDate= JSON.parse('{{ requestsDate | tojson | safe }}');
+    /* convert startDate format */
+    var startDate="{{startDate}}";
+    
+    var start_Date=new Date(startDate)
+    /* convert endDate format */
+    var endDate="{{endDate}}";
+    var end_Date= new Date(endDate)
+    console.log(end_Date)
+    console.log(start_Date)
+    /*check if selected duration exceeds leave balance*/
+    if (leaveTypes=="Sick" || leaveTypes== "Sick Family") {
+            if ((parseInt(sickDaysDisplay) < parseInt(leaveDays))){
+                document.getElementById("myAlertSick").style.display = "block";
+                document.getElementById("myAlertAnnual").style.display = "none";
+                document.getElementById("confirm").style.display = "none";
+                document.getElementById("myAlertOverlap").style.display = "none"; }
+            else {
+                document.getElementById("myAlertSick").style.display = "none";
+                document.getElementById("myAlertAnnual").style.display = "none";
+                document.getElementById("confirm").style.display = "block";
+                document.getElementById("myAlertOverlap").style.display = "none"; }
+        } else if (leaveTypes=="Annual") {
+            if ((parseInt(leaveDays)>parseInt(estimated_days))){
+                document.getElementById("myAlertSick").style.display = "none";
+                document.getElementById("myAlertAnnual").style.display = "block";
+                document.getElementById("confirm").style.display = "none";
+                document.getElementById("myAlertOverlap").style.display = "none";
+            }
+            else {
+                document.getElementById("myAlertSick").style.display = "none";
+                document.getElementById("myAlertAnnual").style.display = "none";
+                document.getElementById("confirm").style.display = "block";
+                document.getElementById("myAlertOverlap").style.display = "none"; }
+        }else {document.getElementById("myAlertSick").style.display = "none";
+                document.getElementById("myAlertAnnual").style.display = "none";
+                document.getElementById("confirm").style.display = "block";
+                document.getElementById("myAlertOverlap").style.display = "none";
+
+        };
+    /* check if there is an overlap or not */
+        
+    requestsDate.forEach(function(requestDate) {
+    var mysqlStartDate = new Date(requestDate[0]);
+    var mysqlEndDate = new Date(requestDate[1]);
+    
+   
+    if ((start_Date<=mysqlStartDate) && (end_Date >=mysqlEndDate )){
+        document.getElementById("myAlertSick").style.display = "none";
+        document.getElementById("myAlertAnnual").style.display = "none";
+        document.getElementById("confirm").style.display = "none";
+        document.getElementById("myAlertOverlap").style.display = "block"; 
+        console.log("triggered")}
+    });
+
+
+
+
+
+</script>
+
+{% endblock %} 

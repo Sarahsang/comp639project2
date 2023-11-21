@@ -1,0 +1,226 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+  <div style="margin: 20px 650px; text-align: left;">
+    <div>
+      <a style="text-align: center;" href="/dashboard?id={{session.id}}" class="customizedButton">Back to Dashboard</a>
+    </div>
+  </div>
+
+  <div  class="LR-container"  style="height:75px; display:flex; flex-direction:column; " >
+    <h1 style="margin: auto; color:#242250; font-weight: 900; ">Request Log</h1>
+  </div>
+
+  <div style="margin-top:-30px;">
+    <div style="width:120%; font-size:1vw;" >
+        <div  class="LR-container"  style="display:flex; align-items: center;justify-content:space-around; width:50%;height:auto;color:black;margin-bottom: -50px;" >
+            <input type="text" id="search_name" onkeyup="search_any_field()" placeholder="Search for names..">
+            <input type="text" id="search_status" onkeyup="search_any_field()" placeholder="Search for status..">
+            <input type="text" id="search_type" onkeyup="search_any_field()" placeholder="Search for leave type..">
+            <input type="text" id="search_startdate" onkeyup="search_any_field()" placeholder="Search for start date..">
+        </div>
+        <div  class="LR-container"  style="height:auto;width:50%; display:flex; align-items: center;justify-content:space-around; background-color: white;box-shadow: none; border: 1px solid rgb(214, 214, 214); overflow:auto; " >
+            <div style="width:100%; display:flex; flex-direction:column; ">
+                <table id="myTable">
+                    <thead>
+                        <tr>
+                            <th>Date Requested</th>
+                            <th>Name</th>
+                            <th>Status</th>
+                            <th>Leave Type</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Days Requested</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for request in request_log %}
+                            <tr>
+                                <td>{{ request[0] }}</td>
+                                <td><a class="button-action centered-link" href="/manager/myDRdetail?id={{request[11]}}">{{ request[1] }} {{ request[2] }}</td>
+                                <td>{{ request[3] }}</td>
+                                <td>{{ request[4] }}</td>
+                                <td>{{ request[5] }}</td>
+                                <td>{{ request[6] }}</td>
+                                <td>{{ request[7] }}</td>
+                                <td>
+                                <a class="button-action" href="{{ url_for('view_request', request_id=request[10]) }}">View</a>
+                                {% if session['role_id'] == 2 %}
+                                  {% if request[3] == 'pending' and request[12] == 0 %}
+                                    <form id="approveForm" method="POST" action="/approve_leave">
+                                      <input type="hidden" name="request_id" value="{{ request[10] }}">
+                                      <input type="hidden" name="manager_id" value="{{ request[11] }}">
+                                      <button type="submit" class="button-action">Approve</button>
+                                    </form>
+                                  {% endif %}
+                                {% elif session['role_id'] == 1 %}
+                                  {% if request[3] == 'pending' and request[11] != session['id'] and request[12] == 0 %}
+                                    <form id="approveForm" method="POST" action="/approve_leave">
+                                      <input type="hidden" name="request_id" value="{{ request[10] }}">
+                                      <input type="hidden" name="manager_id" value="{{ request[11] }}">
+                                      <button type="submit" class="button-action">Approve</button>
+                                    </form>
+                                  {% endif %}
+                                {% endif %}
+                            </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+  </div>
+
+
+<script>
+    function search_any_field() {
+      // Declare variables 
+      var input_1, filter_1, input_2, filter_2, input_3, filter_3, input_4, filter4, table, tr, td, i, txtValue;
+      input_1 = document.getElementById("search_name");
+      filter_1 = input_1.value.toUpperCase();
+      input_2 = document.getElementById("search_status");
+      filter_2 = input_2.value.toUpperCase();
+      input_3 = document.getElementById("search_type");
+      filter_3 = input_3.value.toUpperCase();
+      input_4 = document.getElementById("search_startdate");
+      filter_4 = input_4.value.toUpperCase();
+
+      table = document.getElementById("myTable");
+      tr = table.getElementsByTagName("tr");
+    
+      // Loop through all table rows, and hide those who don't match the search query
+      for (i = 0; i < tr.length; i++) {
+        td_1 = tr[i].getElementsByTagName("td")[1];
+        td_2 = tr[i].getElementsByTagName("td")[2];
+        td_3 = tr[i].getElementsByTagName("td")[3];
+        td_4 = tr[i].getElementsByTagName("td")[4];
+        if (td_1) {
+          txtValue_1 = td_1.textContent || td_1.innerText;
+          if (txtValue_1.toUpperCase().indexOf(filter_1) > -1) {
+            tr[i].style.display = "";
+            if (td_2) {
+                txtValue_2 = td_2.textContent || td_2.innerText;
+                if (txtValue_2.toUpperCase().indexOf(filter_2) > -1) {
+                    tr[i].style.display = "";
+                    if (td_3) {
+                        txtValue_3 = td_3.textContent || td_3.innerText;
+                        if (txtValue_3.toUpperCase().indexOf(filter_3) > -1) {
+                            tr[i].style.display = "";
+                            if (td_4) {
+                                txtValue_4 = td_4.textContent || td_4.innerText;
+                                if (txtValue_4.toUpperCase().indexOf(filter_4) > -1) {
+                                    tr[i].style.display = "";
+                                } else {
+                                    tr[i].style.display = "none";
+                                }
+                            } 
+                        } else {
+                            tr[i].style.display = "none";
+                        }
+                    } 
+                } else {
+                    tr[i].style.display = "none";
+                }
+            } 
+          } else {
+            tr[i].style.display = "none";
+          }
+        } 
+      }
+    }
+    
+    
+    function search_name() {
+      // Declare variables 
+      var input, filter, table, tr, td, i, txtValue;
+      input = document.getElementById("search_name");
+      filter = input.value.toUpperCase();
+      table = document.getElementById("myTable");
+      tr = table.getElementsByTagName("tr");
+    
+      // Loop through all table rows, and hide those who don't match the search query
+      for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[1];
+        if (td) {
+          txtValue = td.textContent || td.innerText;
+          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            tr[i].style.display = "";
+          } else {
+            tr[i].style.display = "none";
+          }
+        } 
+      }
+    }
+
+
+    function search_status() {
+      // Declare variables 
+      var input, filter, table, tr, td, i, txtValue;
+      input = document.getElementById("search_status");
+      filter = input.value.toUpperCase();
+      table = document.getElementById("myTable");
+      tr = table.getElementsByTagName("tr");
+    
+      // Loop through all table rows, and hide those who don't match the search query
+      for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[2];
+        if (td) {
+          txtValue = td.textContent || td.innerText;
+          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            tr[i].style.display = "";
+          } else {
+            tr[i].style.display = "none";
+          }
+        } 
+      }
+    }
+
+    function search_type() {
+      // Declare variables 
+      var input, filter, table, tr, td, i, txtValue;
+      input = document.getElementById("search_type");
+      filter = input.value.toUpperCase();
+      table = document.getElementById("myTable");
+      tr = table.getElementsByTagName("tr");
+    
+      // Loop through all table rows, and hide those who don't match the search query
+      for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[3];
+        if (td) {
+          txtValue = td.textContent || td.innerText;
+          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            tr[i].style.display = "";
+          } else {
+            tr[i].style.display = "none";
+          }
+        } 
+      }
+    }
+
+    function search_startdate() {
+      // Declare variables 
+      var input, filter, table, tr, td, i, txtValue;
+      input = document.getElementById("search_startdate");
+      filter = input.value.toUpperCase();
+      table = document.getElementById("myTable");
+      tr = table.getElementsByTagName("tr");
+    
+      // Loop through all table rows, and hide those who don't match the search query
+      for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[4];
+        if (td) {
+          txtValue = td.textContent || td.innerText;
+          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            tr[i].style.display = "";
+          } else {
+            tr[i].style.display = "none";
+          }
+        } 
+      }
+    }
+    </script>
+
+{% endblock %}

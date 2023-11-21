@@ -1,0 +1,805 @@
+/* Main container */
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Helvetica;
+  background-color: #f9f9f9;
+  }
+
+.login-container{
+  background-image: url("/static/Autumn_photo.png");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size:cover;
+  background-position: center center;
+}
+.flash {
+  text-align: center;
+  font-weight: bold;
+  color: royalblue;
+  padding:10px;
+}
+
+  h1, h2 {
+    color: #2b4ae7;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  /* Left panel */
+  .left-panel {
+    background-color: #c6dbf9;
+    width: 15%;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  /* Lincoln University logo */
+  .logo {
+    margin-top: 50px;
+    width: 100px;
+    height:120px;
+  }
+  
+  /* Button container */
+  .button-container {
+    display: flex;
+    flex-direction: column;
+    left: 30px;
+    bottom: 30px;
+  }
+  
+  /* Button style */
+  .button {
+    background-color: #2b4ae7;
+    color: #fff;
+    border: blue;
+    padding: 10px 20px;
+    margin-bottom: 10px;
+    font-size: 24px;
+    cursor: pointer;
+  }
+  
+  /* Hover effect */
+  .button:hover {
+    background-color: #004d99;
+  }
+  
+  /* Top bar */
+  .top-bar {
+    background-color: #c6dbf9;
+    height: 50px;
+    display: flex;
+    justify-content: right;
+    align-items: right;
+    padding: 0 20px;
+    box-sizing: border-box;
+    position: fixed;
+    top: 0;
+    width: 100%;
+  }
+  
+  /* Profile and bell icons */
+  .button-icon {
+    width:30px;
+    height:30px;
+  }
+  
+  /* Main container */
+  .main-container {
+    margin-top: 20px;
+    margin-left: 17%;
+    margin-right: 2%;
+    padding: 10px;
+  }
+  
+  /* Title */
+  .title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  /* Box container */
+  .box-container {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  /* Box style */
+  .box {
+    background-color: #f2f2f2;
+    padding: 20px;
+    flex: 1;
+    margin-right: 10px;
+    box-sizing: border-box;
+    position: relative;
+  }
+  
+  /* Box title */
+  .box-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  /* Box dropdown menu */
+  .dropdown {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+  
+  /* Button row */
+  .button-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  
+  /* Button style */
+  .button-primary {
+    background-color: #0c2d6b;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 24px;
+    cursor: pointer;
+    flex: 1;
+    margin-right: 10px;
+  }
+
+  .button-action {
+
+
+    display: inline-block;
+    padding: 8px 15px;
+    background-color: #2D6efd;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    border: none;
+
+  }
+
+  .button-action:hover {
+    color: #2b4ae7;
+  }
+
+  .button-disable {
+    color: #aba9a9;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  /* Button disabled style */
+  .button-disabled {
+    background-color: #ccc;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 24px;
+    cursor: not-allowed;
+    flex: 1;
+    margin-right: 10px;
+  }
+
+  .LR-container{
+    width: 60%;
+    height:auto;
+    margin-left: 350px;
+    margin-top: 50px;
+    padding-left: 20px;
+    padding-right: 20px;
+    background-color: #f2f2f4;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    display:flex;
+  }
+  .LR-containerREPORT{
+    width: 75%;
+    height:128px;
+    margin-left: 150px;
+    margin-top: 50px;
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color: #f2f2f4;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    display:flex;
+  }
+
+  .customizedButton{
+    display: inline-block;
+    padding: 8px 15px;
+    background-color: #2D49E8;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+
+  
+  }
+
+  .customizedButton:hover{
+    color:#cbcaca;
+    cursor: pointer;
+  }
+
+
+  body{font: Helvetica Neue,Helvetica,Arial,sans-serif;}
+ 
+  .sidebar-name {
+    font-family: Arial;
+    font-weight: bolder;
+    margin: 10px 20px;
+    color: #4a5090;
+  }
+
+  .sidebar-links {
+    margin: 10px 20px;
+  }
+
+/* Fixed sidenav, full height */
+.sidenav {
+	height: 100%;
+	width: 200px;
+	position: fixed;
+	top: 0;
+	left: 0;
+	overflow-x: hidden;
+	padding-top: 20px;
+	z-index:1;
+  }
+  
+  /* Style the sidenav links and the dropdown button */
+  .sidenav a, .dropdown-btn {
+	padding: 6px 8px 6px 16px;
+	text-decoration: none;
+	font-size: 18px;
+	color:#00020a;
+	display: block;
+	border: none;
+	background: none;
+	width: 100%;
+	text-align: left;
+	cursor: pointer;
+	outline: none;
+  }
+  
+
+  .sidenav i{
+	margin-right:8px;
+
+  }
+  /* On mouse-over */
+  .sidenav a:hover, .dropdown-btn:hover {
+	color: #2b4ae7;
+  }
+  
+  /* Main content */
+  .main {
+	margin-left: 200px; /* Same as the width of the sidenav */
+	font-size: 24px; /* Increased text to enable scrolling */
+	padding: 0px 10px;
+  }
+  
+  /* Add an active class to the active dropdown button */
+  .active {
+	background-color: rgb(80, 80, 90);
+	color: white;
+	margin-top:5px;
+  }
+  
+  /* Dropdown container (hidden by default). Optional: add a lighter background color and some left padding to change the design of the dropdown content */
+  .dropdown-container {
+	display: none;
+	padding-left: 8px;
+	margin-left:12px;
+	margin-bottom: 12px;
+  }
+
+  
+  /* Optional: Style the caret down icon */
+  .fa-caret-down {
+	float: right;
+	padding-right: 8px;
+  }
+  
+  /* Some media queries for responsiveness */
+  @media screen and (max-height: 450px) {
+	.sidenav {padding-top: 15px;}
+	.sidenav a {font-size: 18px;}
+  }
+
+
+  /* Style sidenav for larger screens */
+  @media screen and (min-width: 768px) {
+    .sidenav {
+      width: 200px;
+    }
+    .main {
+      margin-left: 200px;
+    }
+  }
+
+  /* Style sidenav for smaller screens */
+  @media screen and (max-width: 767px) {
+    .sidenav {
+      width: 100px;
+    }
+    .main {
+      margin-left: 100px;
+    }
+  }
+
+
+
+
+  .top-nav{
+	margin-left: 320px;
+  margin-right: 320px;
+	margin-top: 20px;
+	padding-left: 20px;
+  padding-right: 20px;
+	background-color: #f2f2f4;
+	box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+	display:flex;
+	vertical-align: center;
+	color: black;
+  
+
+
+}
+	
+.top-nav p{
+	font-size: 26px;
+	font-weight: bold;
+	margin-top:10px;
+	color:#2D49E8;
+}
+
+.top-nav-account {
+	display: flex;
+	margin-top:20px;
+	color:#2D49E8;
+}
+ /*A table for the lists of employees  */
+ table {
+  width: 90%;
+  border-collapse: collapse;
+  table-layout: auto;
+}
+
+th,
+td {
+  padding: 5px;
+  text-align: center;
+  border: 1px solid #2f1192;
+}
+
+th {
+  font-weight: bold;
+}
+
+td:nth-child(n+1) {
+  white-space: nowrap;
+}
+
+tr:nth-child(odd) {
+  background-color:#f2f2f4;
+  ;
+}
+
+ table {
+  word-wrap: break-word;
+}
+
+ .flex-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.apply-leave, .approval-table, .notification, .update-balance {
+  flex: 1;
+  margin: 8px;
+}
+
+.approval-table, .notification {
+  box-sizing: border-box;
+}
+
+.notification {
+  max-width: 15%; 
+  max-height: 500px; 
+  overflow: auto;
+}
+
+.approval-table {
+  font-size: 0.85vw;
+  max-width: 80%; 
+  max-height: 500px; 
+  overflow: auto;
+}
+
+@media (max-width: 1000px) {
+  .approval-table {
+    font-size: 10px;  
+  }
+}
+
+@media (min-width: 8000px) {
+  .approval-table {
+    font-size: 25px;  
+  }
+}
+
+input[type=button] {
+  width: 100%; 
+  height: 50px; 
+}
+
+.nav-link {
+  font-size: 24px; 
+}
+
+label{
+  color:#2b4ae7;
+  font-weight: 400;
+}
+input, textarea, select{
+  border:1px solid #ccc;
+  padding:5px;
+  border-radius: 4px;
+}
+
+a{
+  text-decoration: none;
+  color:black;
+}
+
+.centered-link {
+  display: block;
+}
+
+.sidebar-brand-icon-bottom {
+  position: absolute;
+  bottom: 0;
+}
+
+@media screen and (max-height: 600px) {
+  .sidebar-brand-icon-bottom {
+    position: static;
+  }
+}
+.form__group {
+  position: relative;
+  padding: 20px 0 0;
+  margin-top: 10px;
+ 
+}
+
+.form__field {
+  font-family: inherit;
+  border: 0;
+  border-bottom: 2px solid #9b9b9b;
+  outline: 0;
+  font-size: 1.3rem;
+  color: rgb(10, 10, 10);
+  padding: 7px 0;
+  background: transparent;
+  transition: border-color 0.2s;
+  
+}
+.form__field::placeholder {
+  color: transparent;
+}
+.form__field:placeholder-shown ~ .form__label {
+  font-size: 0.8rem;
+  cursor: text;
+  top: 10px;
+}
+
+.form__label {
+  position: absolute;
+  top: 0;
+  display: block;
+  transition: 0.2s;
+  font-size: 1rem;
+  color:black;
+}
+
+.form__field:focus {
+  padding-bottom: 6px;
+  font-weight: 700;
+  border-width: 5px;
+  border-image: linear-gradient(to right, #208f85, #2b4ae7);
+  border-image-slice: 1;
+
+}
+.form__field:focus ~ .form__label {
+  position: absolute;
+  top: 0;
+  display: block;
+  transition: 0.2s;
+  font-size: 1rem;
+  color: #2b4ae7;
+  font-weight: 700;
+}
+
+/* reset input */
+.form__field:required, .form__field:invalid {
+  box-shadow: none;
+}
+
+
+/* projected balance  */
+.PB-container{
+  width: 60%;
+  height:200px;
+  margin-left: 350px;
+  margin-top: 50px;
+  padding-left: 20px;
+  padding-right: 20px;
+  flex-direction:column; 
+  align-items: center;
+  background-color: #f2f2f4;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+  display:flex;
+}
+
+.PB-button{
+  margin-left:20px;
+  background-color: #2b4ae7;
+  color: #fff;
+  border: blue;
+  border-radius: 5px;
+  padding: 3px 6px 3px 6px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.PB-button:hover {
+  background-color: #004d99;
+}
+.PB-row{
+  display:flex; 
+  height:45px; 
+  width:90%;
+  background-color: white;
+  margin-top:15px;
+  padding:5px;
+  font-size: 1rem;
+  border-radius: 5px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.PB-row h3{
+  font-size:16px;
+  font-weight: bold;
+  padding:8px;
+}
+
+.PB-row span{
+  font-size:14px;
+  font-weight:400;
+}
+
+.PB-row p{
+  margin-left:20px; 
+  color:#2D49E8; 
+  font-size: 20px;
+}
+/* projected balance end */
+
+/* for truncated leave discription*/
+
+.truncated {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+}
+
+.expanded {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: initial;
+}
+
+.leave-column{
+  width: 60%;
+  height:128px;
+  margin-left: 350px;
+  margin-top: 50px;
+  padding-left: 20px;
+  padding-right: 20px;
+  background-color: #f2f2f4;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+  display:flex;
+  margin-bottom:-40px;
+  height:60px; 
+  justify-content: space-around; 
+  align-items: center;
+  
+
+}
+
+/* leave report dropdown menu start */
+.select-menu.active .select-btn i{
+  transform: rotate(-180deg);
+}
+
+.select-menu.active .select-btn{
+  background-color: #f9f9f9;
+}
+
+.select-menu .options{
+  position: absolute;
+  margin-top: 2px;
+  background-color: #fbfbfb;
+  display: none;
+  padding:0;
+  z-index: 0;
+}
+.select-menu.active .options{
+  display: block;
+ 
+ 
+}
+.options .option{
+  position: relative;
+  height: 55px;
+  align-items: center;
+  background-color: #ffffff;
+  padding:15px;
+
+}
+.options .option:hover{
+  background: #e3e1e1;
+}
+
+.option .option-text{
+  font-size: 17px;
+  color: #2D49E8;
+}
+/* leave report dropdown menu end */
+
+
+/* change password start */
+.password-wrapper{
+  position: relative;
+  background: #fff;
+  max-width: 600px;
+  width: 100%;
+  margin-left: 450px;
+  margin-top: 50px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding: 35px 40px;
+  border-radius: 6px;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+}
+.password-input-box{
+  position: relative;
+  height: 65px;
+  margin: 25px 0;
+}
+.password-input-box .password-input{
+  position: relative;
+  height: 100%;
+  width: 100%;
+  outline: none;
+  color: #333;
+  font-size: 18px;
+  font-weight: 500;
+  padding: 0 40px 0 16px;
+  border: 2px solid lightgrey;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+.password-input-box .password-input:focus,
+.password-input-box .password-input:valid{
+  border-color: #4070F4;
+}
+.password-input-box i,
+.password-input-box .password-label{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #a6a6a6;
+  transition: all 0.3s ease;
+}
+.password-input-box .password-label{
+  left: 15px;
+  font-size: 18px;
+  font-weight: 400;
+  background: #fff;
+  padding: 0 6px;
+  pointer-events: none;
+}
+.password-input-box .password-input:focus ~ .password-label,
+.password-input-box .password-input:valid ~ .password-label{
+  top: 0;
+  font-size: 14px;
+  color: #4070F4;
+}
+.password-input-box i{
+  right: 15px;
+  cursor: pointer;
+  padding: 8px;
+}
+
+.alert{
+  display: flex;
+  align-items: center;
+  margin-top: -13px;
+  background-color:#dabcba;
+  padding: 0 40px 0 16px;
+  border: 2px solid lightgrey;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+.alert .error{
+  color: #D93025;
+  font-size: 18px;
+  margin-right: 8px;
+}
+
+.check{
+  display: flex;
+  align-items: center;
+  margin-top: -13px;
+  background-color: #b8d5c0;
+  padding: 0 40px 0 16px;
+  border: 2px solid lightgrey;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.check .right{
+  color: #1f8f3f;
+  font-size: 18px;
+  margin-right: 8px;
+}
+
+.check .text{
+  font-size: 18px;
+  font-weight: 400;
+  color: #1f8f3f;
+}
+
+.alert .text{
+  font-size: 18px;
+  font-weight: 400;
+  color: #D93025;
+}
+.password-input-box.button .password-input{
+  border: none;
+  font-size: 20px;
+  color: #fff;
+  letter-spacing: 1px;
+  background: #4070F4;
+  cursor: not-allowed;
+}
+.password-input-box.button .password-input.active:hover{
+  background: #265df2;
+  cursor: pointer;
+}
+
+.password-button-box{
+  display: flex;
+  justify-content: center;
+}
+
+/* change password end */
+
+.dashboard-button:hover {
+  background-color: rgb(198, 201, 238);
+}

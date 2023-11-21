@@ -1,0 +1,69 @@
+{% extends "base.html" %} 
+{% block title %} {% endblock %} 
+{% block content %}
+<div >
+    <div class="LR-container" style="height:75px; display:flex; flex-direction:column; ">
+        <h1 style="margin:10px auto; color:#242250; font-weight: 900; text-align: center; ">Edit Employee Roles</h1>
+    </div>
+    <div class="search-container" style="margin:50px auto; text-align: center;">
+        <input type="text" id="search_name" onkeyup="search_name()" placeholder="Search by name..">
+        <a style="text-align: center;" href="/dashboard?id={{session.id}}" class="customizedButton">Back to Dashboard</a>
+    </div>
+    <div class="LR-container" style="margin-top:20px;  margin-bottom:-40px; background-color: #2b4ae7;height:40px; justify-content: space-around; align-items: center;">
+        <div style="width:150px;color: white;font-weight: 800;" >Employee Name</div>
+        <div style="width:350px;color: white;font-weight: 800;">Role</div>
+        <div style="width:100px;color: white;font-weight: 800;">Action</div>
+    </div>
+    <div id="myTable">
+        {% for role in roles%}
+        <form method="POST" action="/admin/roles" >
+        {% if role[0] != session['id'] %}
+        <div class="LR-container tr" value="container{{ role[0] }}" style="margin-bottom:-40px;height:60px; justify-content: space-around; align-items: center;">
+            <div style=" width:150px;">{{role[1]}} {{role[2]}} {{role[3]}}</div>
+            <div style="width:350px;">
+                <select required id="roleDropdown" class="form__field " style="font-size:18px;color:rgb(122, 122, 122)" id="role_id" name="role_id">
+                      <option  class="dropdown-option" name="roleTypes" value={{role[4]}} selected>{{role[5]}}</option>
+                      {% for role_type in roleTypes %}
+                      {% if role_type[0] != role[4] %}
+                          <option class="dropdown-option" name="roleTypes" value="{{role_type[0]}}">{{role_type[1]}}</option>
+                      {% endif %}
+                  {% endfor %}
+                </select>
+            </div>
+            <div style="width:100px;">
+                <input type="hidden" name="employee_id" id="employee_id" value="{{ role[0] }}">
+                <button type="submit" style="border-style: none;height:35px;font-size:12px;" class="customizedButton" >Update</button>
+
+            </div>
+        </div>
+
+        {% endif %}
+
+    </form>
+    {% endfor %}
+    </div>
+</div>
+
+
+       <!-- script to set up search by name for employees  -->
+       <script>
+        function search_name() {
+            // Declare variables 
+        var input, filter, container, div, i, txtValue;
+        input = document.getElementById("search_name");
+        filter = input.value.toUpperCase();
+        container = document.getElementById("myTable");
+        div = container.getElementsByClassName("tr");
+
+            // Loop through all table rows, and hide those who don't match the search query
+            for (i = 0; i < div.length; i++) {
+            txtValue = div[i].textContent || div[i].innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                div[i].style.display = "";
+            } else {
+                div[i].style.display = "none";
+            }
+        }
+    }
+</script>
+{% endblock %} 

@@ -1,0 +1,78 @@
+{% extends "base.html" %} 
+{% block title %} Current Leave Balance {% endblock %} 
+{% block content %}
+<div  class="LR-container"  style="height:75px; display:flex; flex-direction:column; " >
+    <h1 style="margin:10px auto; color:#242250; font-weight: 900; ">Current Leave Balance</h1>
+    <div style="margin:-10px auto;color:#2D49E8;font-weight: bold;" >
+        <span>{{leaveBalance[1]}}</span>
+        <span>{{leaveBalance[2]}}</span>
+    </div>
+</div>
+<div style="margin-top:-30px;">
+    <div style="width:120%;" >
+        <div  class="LR-container"  style="display:flex; align-items: center;justify-content:space-around; font-size:14px; width:50%;height:35px;color:black;margin-bottom: -50px;" >
+            <div style="margin-top:14px;">
+                <p >Annual Leave Balance</p>
+                <p style="text-align:center;margin-top:-16px;font-size:10px;">at close of last pay</p>
+            </div>
+            <p style="margin-top:12px;" >Leave approved not Paid</p>
+            <p style="margin-top:12px;">Leave not yet approved</p>
+        </div>
+
+        <div  class="LR-container"  style="height:80px;width:50%; display:flex; align-items: center;justify-content:space-around; font-size:14px; background-color: white;box-shadow: none; border: 1px solid rgb(214, 214, 214);" >
+            <div style="width:40%; display:flex; flex-direction: column; ">
+                <div style="text-align: center;" ><span style="color:#2D49E8; font-size: 24px; font-weight: 400;" >{{leaveBalance[3]}}</span> Hours</div> 
+                <div style="text-align: center;"><span style="color:#2D49E8; font-size: 24px; font-weight: 400;" >{{AnnualDaysDisplay}}</span> Days</div>
+            </div>
+            <div style="width:40%; display:flex; flex-direction: column;">
+                <div style="text-align: center;"><span style="color:#2D49E8; font-size: 24px; font-weight: 400;" >{{annual_unpaidHours}}</span> Hours</div> 
+                <div style="text-align: center;"><span style="color:#2D49E8; font-size: 24px; font-weight: 400;" >{{unpaidAnnualDays}}</span> Days</div>
+            </div>
+            <div style="width:40%; display:flex; flex-direction: column;">
+                <div style="text-align: center;"><span style="color:#2D49E8; font-size: 24px; font-weight: 400;" >{{annual_unapprovedHours}}</span> Hours</div> 
+                <div style="text-align: center;"><span style="color:#2D49E8; font-size: 24px; font-weight: 400;" >{{unapprovedAnnualDays}}</span> Days</div>
+            </div>
+        </div>
+    </div>
+    <div style="margin-top:-30px; width:120%;" >
+        <div  class="LR-container"  style="display:flex; align-items: center;justify-content:space-around; font-size:14px; width:50%;height:35px;color:black;margin-bottom: -50px;" >
+            <div style="margin-top:14px;">
+                <p >Sick Leave Balance</p>
+                <p style="text-align:center;margin-top:-16px;font-size:10px;">at close of last pay</p>
+            </div>
+            <p style="margin-top:12px;" >Leave approved not Paid</p>
+            <p style="margin-top:12px;">Leave not yet approved</p>
+        </div>
+
+        <div  class="LR-container"  style="height:80px;width:50%; display:flex; align-items: center;justify-content:space-around; font-size:14px; background-color: white;box-shadow: none; border: 1px solid rgb(214, 214, 214);" >
+            <div style="width:40%; display:flex; flex-direction: column; ">
+                <div style="text-align: center;" ><span style="color:#2D49E8; font-size: 24px; font-weight: 400;" >{{leaveBalance[4]}}</span> Hours</div> 
+                <div style="text-align: center;"><span style="color:#2D49E8; font-size: 24px; font-weight: 400;" >{{sickDaysDisplay}}</span> Days</div>
+            </div>
+            <div style="width:40%; display:flex; flex-direction: column;">
+                <div style="text-align: center;"><span style="color:#2D49E8; font-size: 24px; font-weight: 400;" >{{sick_unpaidHours}}</span> Hours</div> 
+                <div style="text-align: center;"><span style="color:#2D49E8; font-size: 24px; font-weight: 400;" >{{unpaidSickDays}}</span> Days</div>
+            </div>
+            <div style="width:40%; display:flex; flex-direction: column;">
+                <div style="text-align: center;"><span style="color:#2D49E8; font-size: 24px; font-weight: 400;" >{{sick_unapprovedHours}}</span> Hours</div> 
+                <div style="text-align: center;"><span style="color:#2D49E8; font-size: 24px; font-weight: 400;" >{{unapprovedSickDays}}</span> Days</div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div style="margin:50px auto; text-align: center;">
+                <div>
+                    <a style="margin-right:20px;" href="/dashboard?id={{session.id}}" class="customizedButton">Back to Dashboard</a>
+                    <a style="margin-right:20px;" href="/applyLeave?id={{session.id}}" class="customizedButton">Apply for Leave</a>
+                    <a href="/leaveRequests?id={{session.id}}" class="customizedButton">Leave Requests</a>
+
+                </div>
+    </div>
+   
+</div>
+
+
+{% endblock %} 
+

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Date Range Picker Example</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Include jQuery -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+</head>
+<body>
+    <label for="start_date">Start Date:</label>
+<input type="text" id="start_date">
+
+<label for="end_date">End Date:</label>
+<input type="text" id="end_date">
+
+<button id="submit-dates">Submit Dates</button>
+
+<script>
+
+$('#start_date').daterangepicker({
+  singleDatePicker: true,
+  startDate: moment().startOf('day'),
+  locale: {
+    format: 'MM/DD/YYYY',
+  },
+  minDate: moment().subtract(1, 'month'),
+  maxDate: moment().add(1, 'year'),
+  isInvalidDate: function(date) {
+    // Return true for weekend dates (Saturday and Sunday)
+    return (date.day() === 0 || date.day() === 6);
+  }
+});
+
+// Handle the apply event to get the selected date
+$('#start_date').on('apply.daterangepicker', function(ev, picker) {
+  // Get the selected date
+  var selectedDate = picker.startDate;
+
+  // Format the selected date as a string
+  var formattedDate = selectedDate.format('MM/DD/YYYY');
+   $('#end_date').daterangepicker({
+    singleDatePicker: true,
+    minDate: formattedDate,
+    maxDate: moment(formattedDate).add(1, 'year'),
+    isInvalidDate: function(date) {
+    // Return true for weekend dates (Saturday and Sunday)
+        return (date.day() === 0 || date.day() === 6);
+  }
+    });
+});
+
+$(function() {
+
+  // Send AJAX request when dates are selected
+  $("#submit-dates").on("click", function() {
+    var startDate = $("#start_date").val();
+    var endDate = $("#end_date").val();
+    $.ajax({
+      type: "POST",
+      url: "/process_dates",
+      data: {
+        start_date: startDate,
+        end_date: endDate
+      }
+    });
+  });
+});
+</script>
+</body>
+</html>

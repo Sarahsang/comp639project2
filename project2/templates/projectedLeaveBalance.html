@@ -1,0 +1,108 @@
+{% extends "base.html" %} 
+{% block title %} Projected Leave Balance {% endblock %} 
+{% block content %}
+
+<div  class="LR-container"  style="display:flex; flex-direction:column; height:75px;" >
+    <h1 style="margin:10px auto; color:#242250; font-weight: 900; ">Projected Leave Balance</h1>
+    <div style="margin:-10px auto;color:#2D49E8;font-weight: bold;" >
+        <span>{{leaveBalance[1]}}</span>
+        <span>{{leaveBalance[2]}}</span>
+    </div>
+</div>
+
+
+<div style="margin-top:-30px;">
+
+    <form action="{{ url_for('projectedLeaveBalance') }}" method="post">
+        <div style="width:120%;" >
+            <div  class="PB-container"  style="flex-direction:row; justify-content:center; width:50%;height:35px;color:black;margin-bottom: -50px;" >
+                <label for="date-picker">Select a projected date:</label>
+                <input type="date" style="margin-left:30px;" name="projected_date" id="date-picker" required/>
+                <button type="submit" class="PB-button" >Select</button>
+            </div>
+        </div>
+    </form>
+
+    {% if annualDays %}
+    <div  class="PB-container" style="margin-top:60px;" >
+        <div  class="PB-row">
+            <h3>Annual Leave Balance <span>(at close of last pay): </span> </h3>
+            <div>
+                <span style="margin-left:20px; color:#2D49E8; font-size: 20px;">{{annualDays}}</span> Days 
+                <span style="margin-left:20px; font-size: 16px;">or<span>
+                <span style="margin-left:20px; color:#2D49E8; font-size: 20px;">{{annualHours}}</span> Hours
+            </div>
+        </div>
+        <div class="PB-row">
+            <h3>Leave not yet approved:  </h3>
+            <div>
+                <span style="margin-left:20px; color:#2D49E8; font-size: 20px;">{{unapprovedAnnualDays}}</span> Days 
+                <span style="margin-left:20px; font-size: 16px;">or<span>
+                <span style="margin-left:20px; color:#2D49E8; font-size: 20px;">{{annual_unapprovedHours}}</span> Hours
+            </div>
+        </div>
+        <div  class="PB-row">
+            <h3>Leave approved not Paid: </h3>
+            <div>
+                <span style="margin-left:20px; color:#2D49E8; font-size: 20px;">{{unpaidAnnualDays}}</span> Days 
+                <span style="margin-left:20px; font-size: 16px;">or<span>
+                <span style="margin-left:20px; color:#2D49E8; font-size: 20px;">{{annual_unpaidHours}}</span> Hours
+            </div>
+        </div>             
+    </div>    
+    
+
+    <div  class="PB-container" style="height:140px; margin-top:20px;">
+        <div  class="PB-row">
+            <h3>Projected accrual to <span style="color:#2D49E8;font-size:16px;font-weight: bold;">{{projected_date}}</span>: </h3>
+            <div>
+                <span style="margin-left:20px; color:#2D49E8; font-size: 20px;">{{projected_accrualdays}}</span> Days 
+                <span style="margin-left:20px; font-size: 16px;">or<span>
+                <span style="margin-left:20px; color:#2D49E8; font-size: 20px;">{{projected_accrualhours}}</span> Hours
+            </div>
+        </div>
+        <div class="PB-row">
+            <h3>Estimated projected leave balance:  </h3>
+            <div>
+                <span style="margin-left:20px; color:#2D49E8; font-size: 20px;">{{estimated_days}}</span> Days 
+                <span style="margin-left:20px; font-size: 16px;">or<span>
+                <span style="margin-left:20px; color:#2D49E8; font-size: 20px;">{{estimated_hours}}</span> Hours
+            </div>
+        </div>        
+    </div>  
+
+    <div style="margin:50px auto; text-align: center;">
+        <div>
+            <a style="margin-right:20px; margin-top:-20px;" href="/dashboard?id={{session.id}}" class="customizedButton">Back to Dashboard</a>
+            <a style="margin-right:20px; margin-top:-20px;" href="/applyLeave?id={{session.id}}" class="customizedButton">Apply for Leave</a>
+        </div>
+    </div>
+    
+    {% endif %}    
+
+</div>
+
+
+<script>
+    // Create a new Date object representing today's date
+    var today = new Date();
+    // Get the day, month, and year values from the Date object
+    var dd = today.getDate();
+    var mm = today.getMonth()+1; // January is 0, so we add 1
+    var yyyy = today.getFullYear();
+
+    // Add leading zeros to the day and month values if necessary
+    if(dd<10){
+        dd='0'+dd;
+    } 
+    if(mm<10){
+        mm='0'+mm;
+    } 
+
+    // Format the date as yyyy-mm-dd
+    today = yyyy+'-'+mm+'-'+dd;
+    // Set the min attribute of the date picker to today's date
+    document.getElementById("date-picker").setAttribute("min", today);   
+    </script>
+
+{% endblock %} 

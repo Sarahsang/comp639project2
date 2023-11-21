@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DatePicker Example</title>
+    
+
+    
+</head>
+<body>
+   <label for="startDate">Start Date:</label>
+<input type="date" id="startDate" name="startDate" min="{{ min_startdate.strftime('%Y-%m-%d') }}" max="{{  max_startdate.strftime('%Y-%m-%d') }}" onchange="setEndDateRange()">
+
+<label for="endDate">End Date:</label>
+<input type="date" id="endDate" name="endDate">
+
+<script>
+
+const startDate = document.getElementById('startDate');
+startDate.addEventListener('input', function(e){
+  var day = new Date(this.value).getUTCDay();
+  if([6,0].includes(day)){
+    e.preventDefault();
+    this.value = '';
+    alert('Weekends not allowed');
+  }
+});
+
+const sendDate = document.getElementById('endDate');
+startDate.addEventListener('input', function(e){
+  var day = new Date(this.value).getUTCDay();
+  if([6,0].includes(day)){
+    e.preventDefault();
+    this.value = '';
+    alert('Weekends not allowed');
+  }
+});
+function setEndDateRange() {
+
+    var startDateInput = document.getElementById("startDate");
+    var endDateInput = document.getElementById("endDate");
+    var startDate = new Date(startDateInput.value);
+    var maxEndDate = new Date(startDate.getFullYear() + 1, startDate.getMonth(), startDate.getDate());
+    var minEndDate = startDate;
+    endDateInput.setAttribute("min", minEndDate.toISOString().slice(0, 10));
+    endDateInput.setAttribute("max", maxEndDate.toISOString().slice(0, 10)); 
+  }
+</script>
+</body>
+</html>

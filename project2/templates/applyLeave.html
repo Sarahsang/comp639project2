@@ -1,0 +1,398 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.7/index.global.min.js'></script>
+
+
+<div id="section1">
+  <div  class="LR-container"  style="display:flex; flex-direction:column; height:80px;" >
+      <h1 style="margin:10px auto; color:#242250; font-weight: 900; ">
+        {% if edit_mode == "1" %}
+        Edit Leave
+        {% else %}
+        Apply for Leave
+        {% endif %}
+      </h1>
+      {% if edit_mode == "1" %}
+        <div style="margin:-10px auto;color:#2D49E8;font-weight: bold;" >
+          <span>{{edit_request[0][1]}}</span>
+          <span>{{edit_request[0][2]}}</span>
+          {% if session.id != edit_request[0][0] %}
+          <span>(Edit On behalf)</span>
+          {% endif %}
+        </div>
+      {% else %}
+      <div style="margin:-10px auto;color:#2D49E8;font-weight: bold;" >
+          <span>{{detail[2]}}</span>
+          <span>{{detail[3]}}</span>
+      </div>
+      {% endif %}
+  </div>
+
+
+
+  <div style="margin-top:20px ; padding-left: 65px;height:370px;display:flex;" class="LR-container">
+      <form style="margin-top:10px; margin-left:130px;" method="POST" action="/leaveConfirm" >
+        <div style=" display:flex;" class="form__group field">
+        {% if edit_mode == "1" %}
+          <input hidden name="request_uid" value={{edit_request[0][0]}}></input>
+          <input hidden name="edit_mode" value="1"></input>
+          <input hidden name="edit_rid" value={{edit_rid}}></input>
+        {% else %}
+          <input hidden name="request_uid" value={{session.id}}></input>
+          <input hidden name="edit_mode" value="0"></input>
+          <input hidden name="edit_rid" value="0"></input>
+        {% endif %}
+          <label  class="form__label" placeholder="Name" for="leaveTypes">Choose a Leave Type:</label>
+          <select required id="leaveTypeDropdown" onchange="updateLeaveBalance()" class="form__field " style="font-size:18px;color:rgb(122, 122, 122)" id="leaveTypes" name="leaveTypes">
+              <option  class="dropdown-option" value=""></option>
+              {%for type in leaveTypes%}
+                {% if edit_mode == "1" and edit_type == type[1] %}
+                  <option  class="dropdown-option" name="leaveTypes" value={{edit_type}} selected>{{edit_type}}</option>
+                {% else %}
+                  <option  class="dropdown-option" name="leaveTypes" value={{type[1]}}>{{type[1]}}</option>
+                {% endif %}
+              {%endfor%}
+
+          </select>
+        </div>
+        <div><p style="color:#2b4ae7;" id="leaveBalance"></p></div>
+        
+        <div  style="display:flex; justify-content: space-between;">
+          <div  class="form__group field">
+            <label class="form__label"  for="start_date">Start Date:</label>  
+            {% if edit_mode == "1" %}
+            <input  required  style="font-size:18px;color:rgb(122, 122, 122)"  class="form__field" type="text" name="start_date" id="start_date" value="{{edit_start}}">
+            {% else %}
+            <input  required  style="font-size:18px;color:rgb(122, 122, 122)"  class="form__field" type="text" name="start_date" id="start_date" value="{{startdate_today}}">
+            {% endif %}
+    
+          </div>
+          
+          <div  style="margin-left:50px;" class="form__group field">
+              <label class="form__label"  for="end_date">End Date:</label>
+              {% if edit_mode == "1" %}
+              <input  required  style="font-size:18px;color:rgb(122, 122, 122)"  class="form__field"  type="text" name="end_date" id="end_date" value="{{ edit_end }}">
+              {% else %}
+              <input  required  style="font-size:18px;color:rgb(122, 122, 122)"  class="form__field"  type="text" name="end_date" id="end_date">
+              {% endif %}
+              
+            </div>
+          </div>
+          <script>
+            $(document).ready(function() {
+              // Listen for the end date selection event
+              $('#end_date').on('change', function() {
+                var startDate = $('#start_date').val();
+                var endDate = $(this).val();
+          
+                // Send the start and end dates to the Flask route
+                $.ajax({
+                  url: '/calculate',
+                  type: 'POST',
+                  data: JSON.stringify({ startDate: startDate, endDate: endDate }),
+                  contentType: 'application/json',
+                  success: function(response) {
+                    // Update the UI with the calculated results
+                    $('#result').text(response.result);
+                  },
+                  error: function(error) {
+                    console.error('Error:', error);
+                  }
+                });
+              });
+            });
+          </script>
+          
+          <p><span style="color:#2b4ae7;" id="result"></span></p>
+        
+      
+        <div  class="form__group field">
+          <label class="form__label"  for="comments">Comments:</label>
+          {% if edit_mode == "1" %}
+          <input style="width:100%;" style="font-size:18px;color:rgb(122, 122, 122)"  class="form__field"  name="comments" id="comments" value="{{ edit_comment }}"></input>
+     
+          {% else %}
+          <input style="width:100%;" style="font-size:18px;color:rgb(122, 122, 122)"  class="form__field"  name="comments" id="comments"></input>
+
+          {% endif %}
+          <input hidden name="request_id" id="request_id" value="{{edit_rid}}">
+          <input hidden name="previous_url" id="previous_url" value="{{previous_url}}">
+        </div>
+        <div style="text-align:center;">
+          {% if edit_mode == "1" %}
+          <input  style="margin: 15px auto;" class="customizedButton" type="submit" value="Save and Submit">
+          {% else %}
+        <input  style="margin: 15px auto;" class="customizedButton" type="submit" value="Submit">
+        {% endif %}
+        </div>
+          
+      </form>
+  </div><hr style="margin-top:60px; ">
+</div>
+
+<br>
+<br>
+<br>
+<br>
+<div id="section2">
+  <div  class="LR-container"  style="margin-top:30px; display:flex; flex-direction:column; height:50px;" >
+    <h1 style="margin:10px auto; color:#242250; font-weight: 900; ">My Leave Calendar</h1>
+  </div>
+  <div class="LR-container" style=" height:700px; margin-top:20px; margin-bottom: 60px;">
+    <div style="width:100%;" id='calendar'></div>
+  </div>
+</div>
+
+<div class="LR-container" style="background-color:#fbfbfb; box-shadow: none;" id="section3">    
+  <div style="margin:10px 240px;">
+      <a style="margin-right:20px; margin-bottom: 20px;" href="/applyLeave?id={{session.id}}" class="customizedButton">Apply again</a>
+      <a href="/dashboard?id={{session.id}}" class="customizedButton">Back to Dashboard</a>
+  </div>
+</div>
+
+<script> //to display updated leave calendar when user applys a new leave request
+  // Get the URL
+const url = window.location.href;
+const submitDetails="submitDetails"
+// Check if the variable exists in the URL
+if (url.indexOf(submitDetails) !== -1) {
+  // Variable exists in the URL
+  // Display calendar and buttons here
+  document.getElementById("section2").style.display = "block";
+  document.getElementById("section1").style.display = "none";
+  document.getElementById("section3").style.display = "block";
+}  else{
+  document.getElementById("section2").style.display = "block";
+  document.getElementById("section1").style.display = "block";
+  document.getElementById("section3").style.display = "none";
+}
+</script>  
+<script>
+  document.getElementById("submit-btn").addEventListener("click", function() {
+  var startDate = new Date(document.getElementById("start-date").value);
+  var endDate = new Date(document.getElementById("end-date").value);
+  var duration = (endDate - startDate) / (1000 * 60 * 60 * 24); // Calculate duration in days
+  
+  var leaveBalance = 10; // Assume the leave balance is 10 days
+  
+  if (duration > leaveBalance) {
+    alert("The selected duration exceeds your leave balance.");
+  }
+});
+</script>
+
+<script>
+  function updateLeaveBalance() {
+    var leaveType = document.getElementById("leaveTypeDropdown").value;
+    var leaveBalanceElement = document.getElementById("leaveBalance");
+
+    if (leaveType === "Sick") {
+      leaveBalanceElement.textContent = "You have {{leaveBalance[4]}} hours or {{sickDaysDisplay}} days of sick leave at close of last pay";
+    } else if (leaveType === "Annual") {
+      leaveBalanceElement.textContent = "You have {{leaveBalance[3]}} hours or {{AnnualDaysDisplay}} days of annual leave at close of last pay";
+    } else {
+      leaveBalanceElement.textContent = "";
+    }
+  }
+</script>
+<script>
+// Accessing Flask calendarHolidays variable in JavaScript and convert it into a js array
+var  calendarHolidays= JSON.parse('{{ calendarHolidays | tojson | safe }}');
+var holidays=calendarHolidays.map(function(holiday) {
+  return holiday[0];
+});
+var formattedholidays = holidays.map(function(date) {
+  return moment(date).format('YYYY-MM-DD');
+});
+// Accessing Flask allRequests variable in JavaScript and convert it into a js array
+var  allRequests = JSON.parse('{{ allRequests  | tojson | safe }}');
+var requests=allRequests.map(function(leave) {
+  return  [leave[3], leave[4]]; 
+});
+// Construct the array of date ranges
+const allRequestsDates = requests.map(function(row) {
+  return {
+    minDate: row[0],
+    maxDate: row[1]
+  };
+});
+
+
+$('#start_date').daterangepicker({
+  
+    singleDatePicker: true,
+    startDate: $("#start_date").val(),
+    locale: {
+      format: 'MM/DD/YYYY',
+    },
+    minDate: moment().subtract(1, 'month'),
+    maxDate: moment().add(1, 'year'),
+    isInvalidDate: 
+    function(date) {
+      // Check if the date falls within any of the specified ranges
+      for (var i = 0; i <allRequestsDates.length; i++) {
+        var range = allRequestsDates[i];
+        var adjustedMinDate = moment(range.minDate).subtract(1, 'day');
+        var adjustedMaxDate = moment(range.maxDate);
+        if (date.isBetween(adjustedMinDate, adjustedMaxDate , null, '[]')) {
+          return true ||  (date.day() === 0 || date.day() === 6)|| formattedholidays.includes(date.format('YYYY-MM-DD')) ; // Date is within a valid range // Check if the date is in the array of invalid dates
+      // Return true for weekend dates (Saturday and Sunday)
+        }
+      }
+      return false ||  (date.day() === 0 || date.day() === 6)|| formattedholidays.includes(date.format('YYYY-MM-DD')) ; // Date is outside all ranges, hence invalid
+    }, 
+
+  });
+  
+  // Handle the apply event to get the selected date
+  $('#start_date').on('apply.daterangepicker', function(ev, picker) {
+    // Get the selected date
+    var selectedDate = picker.startDate;
+  
+    // Format the selected date as a string
+    var formattedDate = selectedDate.format('MM/DD/YYYY');
+    // Accessing Flask allRequests variable in JavaScript and convert it into a js array
+    var  allRequests = JSON.parse('{{ allRequests  | tojson | safe }}');
+    var requests=allRequests.map(function(leave) {
+      return  [leave[3], leave[4]]; 
+    });
+    // Construct the array of date ranges
+    const allRequestsDates = requests.map(function(row) {
+      return {
+        minDate: row[0],
+        maxDate: row[1]
+      };
+    });
+    // Accessing Flask calendarHolidays variable in JavaScript and convert it into a js array
+    var  calendarHolidays= JSON.parse('{{ calendarHolidays | tojson | safe }}');
+    var holidays=calendarHolidays.map(function(holiday) {
+      return holiday;
+      })
+      console.log(holidays);
+    $('#end_date').daterangepicker({
+      singleDatePicker: true,
+      minDate: formattedDate,
+      maxDate: moment(formattedDate).add(1, 'year'),
+      isInvalidDate: 
+      function(date) {
+        // Check if the date falls within any of the specified ranges
+        for (var i = 0; i <allRequestsDates.length; i++) {
+          var range = allRequestsDates[i];
+          var adjustedMinDate = moment(range.minDate).subtract(1, 'day');
+          var adjustedMaxDate = moment(range.maxDate);
+          if (date.isBetween(adjustedMinDate, adjustedMaxDate, null, '[]')) {
+            return true ||  (date.day() === 0 || date.day() === 6)|| formattedholidays.includes(date.format('YYYY-MM-DD')) ; // Date is within a valid range // Check if the date is in the array of invalid dates
+        // Return true for weekend dates (Saturday and Sunday)
+          }
+        }
+        return false ||  (date.day() === 0 || date.day() === 6)|| formattedholidays.includes(date.format('YYYY-MM-DD')) ; // Date is outside all ranges, hence invalid
+      }, 
+
+  });
+  
+    
+  });
+  
+  $(function() {
+  
+    // Send AJAX request when dates are selected
+    $("#submit-dates").on("click", function() {
+      var startDate = $("#start_date").val();
+      var endDate = $("#end_date").val();
+      $.ajax({
+        type: "POST",
+        url: "/process_dates",
+        data: {
+          start_date: startDate,
+          end_date: endDate
+        }
+      });
+    });
+  });
+  </script>
+
+<script>
+
+  document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
+    // Create an array to store the event objects
+    var eventsHoliday = [];
+
+    // Iterate over the holidays array and create event objects
+    var formattedHoliday = calendarHolidays.map(function(item) {
+        return { start: moment(item[0]).format('YYYY-MM-DD'), title:item[1]};
+      });
+    
+      formattedHoliday.forEach(function(holiday) {
+      eventsHoliday.push({
+        start: holiday.start,
+        title: holiday.title
+      });
+    });
+    console.log(eventsHoliday)
+    // Create an array to store the approved leave objects
+    var eventsApproved = [];
+    var  approvedLeaveC= JSON.parse('{{ approvedLeaveC | tojson | safe }}');
+
+    // Iterate over the leave request array and create approved leave objects
+    var formattedapproved = approvedLeaveC.map(function(item) {
+        return { start: moment(item[3]).format('YYYY-MM-DD'), end: moment(item[4]).add(1, 'day').format('YYYY-MM-DD'), title:item[2]};
+      });
+    
+      formattedapproved.forEach(function(leave) {
+        eventsApproved.push({
+        start: leave.start,
+        end:leave.end,
+        title: leave.title,
+        url: "/leaveRequests"
+
+      });
+    });
+
+    console.log(eventsApproved)
+    // Create an array to store the pending leave objects
+    var eventsPending = [];
+    var  pendingLeaveC= JSON.parse('{{ pendingLeaveC | tojson | safe }}');
+
+    // Iterate over the leave request array and create pending leave objects
+    var formattedPending = pendingLeaveC.map(function(item) {
+        return { start: moment(item[3]).format('YYYY-MM-DD'), end: moment(item[4]).add(1, 'day').format('YYYY-MM-DD'), title: "Pending " +item[2]};
+      });
+
+      formattedPending.forEach(function(leave) {
+        eventsPending.push({
+        start: leave.start,
+        end:leave.end,
+        title: leave.title,
+        url: "/leaveRequests"
+      });
+    });
+    console.log(eventsPending)
+    
+    var events = [...eventsHoliday, ...eventsApproved, ...eventsPending];
+
+
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: 'dayGridMonth',
+      initialDate: '2023-06-01',
+      headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek,timeGridDay'
+      },
+      
+      events: events
+    });
+  
+    calendar.render();
+  });
+  
+</script>
+{% endblock%}
+

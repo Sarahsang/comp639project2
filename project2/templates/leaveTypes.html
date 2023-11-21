@@ -1,0 +1,208 @@
+{% extends "base.html" %} 
+{% block title %} Manage Leave Types {% endblock %} 
+{% block content %}
+<script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
+
+<div >
+    <div  class="LR-container"  style="display:flex; flex-direction:column; height:80px;" >
+        <h1 style="margin:10px auto; color:#242250; font-weight: 900; ">
+            Manage Leave Types
+        </h1>
+        <div style="margin:-10px auto;color:#2D49E8;font-weight: bold;" >
+            <span>{{detail[2]}}</span>
+            <span>{{detail[3]}}</span>
+        </div>
+    </div>
+    <div class="LR-container" style="margin-top:20px;  margin-bottom:-40px; background-color: #2b4ae7;height:40px; justify-content: space-around; align-items: center;">
+        <div style="width:150px;color: white;font-weight: 800;">Leave Name</div>
+        <div style="width:350px;color: white;font-weight: 800;">Description</div>
+        <div style="width:150px;color: white;font-weight: 800;">Actions</div>
+    </div>
+    <div id="columns-container">
+      {% for type in leave_type %}
+      <div class="LR-container leave-column" id="container{{ type[0] }}" style="margin-bottom:-40px;height:60px; justify-content: space-around; align-items: center;">
+        <div style="width:150px;">
+          <div class="leave-name" >{{ type[1] }}</div>
+          <input type="hidden" class="leave-id" value="{{ type[0] }}"></input>
+          <input type="text" class="edit-leave-name" style="display: none;" value="{{ type[1] }}">
+        </div>
+        <div style="width:350px;">
+          <div class="truncated" id="description{{ type[0] }}" data-expanded="false">{{ type[2] }}</div>
+          <input type="text" class="edit-leave-description" style="display: none;" value="{{ type[2] }}">
+          <a style="font-size:10px; color:rgb(58, 82, 200);" href="#" onclick="toggleDescription('{{ type[0] }}')">Read More</a>
+        </div>
+        <div style="width:160px;">
+          <button  onclick="editLeave(this)" style="border-style: none;height:35px;font-size:12px;" class="customizedButton editButton">Edit</button>
+          {% if type[0] >=8 %}
+          <button name="delete-types" id="delete-types" value="{{ type[0] }}" onclick="deleteLeave()" style="border-style: none;height:35px;font-size:12px;" class="customizedButton">Delete</button>
+          {% endif %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+</div>
+
+
+<div class="LR-container" style="background-color:#fbfbfb; box-shadow: none;" >
+    <button onclick="addLeave()" style="margin: 15px auto;border-style: none;height:40px;" class="customizedButton">Add</button>
+</div>
+
+
+<script>
+    // JavaScript code to fold and unfold leave discription
+    var toggleDescription = function(index) {
+        var descriptionElement = document.getElementById('description' + index);
+        var isExpanded = descriptionElement.dataset.expanded === 'true';
+        var containerElement = document.getElementById('container'+index);
+
+        if (!isExpanded) {
+            descriptionElement.classList.remove('truncated');
+            descriptionElement.classList.add('expanded');
+            descriptionElement.dataset.expanded = 'true';
+            containerElement.style.height = 'auto';
+            event.target.textContent = 'Read Less';
+        } else {
+            descriptionElement.classList.remove('expanded');
+            descriptionElement.classList.add('truncated');
+            descriptionElement.dataset.expanded = 'false';
+            containerElement.style.height = '60px'; 
+            event.target.textContent = 'Read More';
+        }
+    };
+</script>
+
+<script>
+    function addLeave() {
+        var columnsContainer = document.getElementById('columns-container');
+        var newColumn = document.createElement('div');
+        newColumn.className = 'leave-column';
+        newColumn.innerHTML = `
+            <input name="leaveName" id="leaveName" style=" width:150px;border-style:none; font-size:14px;" type="text" name="leaveType" placeholder="click to input name">
+            <input name="leaveDescription" id="leaveDescription" style="width:350px;border-style:none;font-size:14px;" type="text" name="description" placeholder="click to input discription">
+            <div name="submit-types" id="submit-types" style="width:160px;">
+                <button  style="border-style: none;height:35px;font-size:12px;" class="customizedButton ">submit</button>
+            </div>   
+        `;
+        columnsContainer.appendChild(newColumn);
+
+        $(document).ready(function() {
+            // Send AJAX request when types are added
+            $("#submit-types").on("click", function() {
+                var leaveName = $("#leaveName").val();
+                var leaveDescription = $("#leaveDescription").val();
+                $.ajax({
+                url: "/admin/leaveTypes",
+                type: "POST",
+                data: {
+                    leaveName: leaveName,
+                    leaveDescription: leaveDescription
+                },
+                success: function(response) {
+                console.log(response);
+                // Reload the page
+                location.reload();
+                },
+                error: function(error) {
+                console.log(error);
+                }
+                });
+             });
+        });
+    }
+//edit a leave type
+function editLeave(button) {
+  var leaveColumn = $(button).closest(".leave-column");
+  var leaveName = leaveColumn.find(".leave-name");
+  var leaveDescription = leaveColumn.find(".truncated");
+  var editButton = leaveColumn.find(".editButton");
+  var readMoreLink = leaveColumn.find("a");
+
+
+  // Create input fields for name and description
+  var inputName = $("<input>")
+    .attr("type", "text")
+    .val(leaveName.text())
+    .addClass("edit-leave-name");
+
+  var inputDescription = $("<input>")
+    .attr("type", "text")
+    .val(leaveDescription.text())
+    .addClass("edit-leave-description")
+    .css("width", "350px",
+    ); // Adjust the width as desired
+
+
+  // Replace name and description with input fields
+  leaveName.replaceWith(inputName);
+  leaveDescription.replaceWith(inputDescription);
+
+  // Hide the "Read More" link
+  readMoreLink.hide();
+
+  // Change edit button text to "Submit" and update click event handler
+  editButton.text("Submit").click(function() {
+    var updatedLeaveName = inputName.val();
+    var updatedLeaveDescription = inputDescription.val();
+    var leave_ID = leaveColumn.find(".leave-id").val();
+    
+
+    // Send AJAX request to app.py
+    $.ajax({
+      url: "/admin/leaveTypes", // Replace with the appropriate URL for your server
+      method: "POST",
+      data: {
+        leave_ID:leave_ID,
+        editName: updatedLeaveName,
+        editDescription: updatedLeaveDescription
+      },
+      success: function(response) {
+        // Handle success response
+        console.log(response);
+        // Reload the page or perform any necessary action
+        location.reload();
+      },
+      error: function(error) {
+        // Handle error response
+        console.log(error);
+      }
+    });
+    console.log(triggered)
+  });
+
+}
+// DELETE A LEAVE TYPE
+    
+$(document).ready(function() {
+  // Attach click event handler to all delete buttons with the class "delete-button"
+  $("#delete-types").on("click", function() {
+
+    // Retrieve the leave ID associated with the clicked delete button
+    var deleted_ID = $("#delete-types").val();
+
+    console.log(deleted_ID)
+    // Send AJAX request to app.py with the leave ID
+    $.ajax({
+      url: "/admin/leaveTypes",
+      type: "POST",
+      data: {
+        deleted_leaveID: deleted_ID
+      },
+      success: function(response) {
+        // Handle the response from app.py
+        console.log(response);
+        // Reload the page
+        // Reload the page
+        location.reload();
+      },
+      error: function(error) {
+        console.log(error);
+      }
+    });
+  });
+});
+
+
+</script>
+
+
+{% endblock %} 

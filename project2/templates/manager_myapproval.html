@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<div class="main-container">
+
+<form action="{{url_for('myapproval')}}" method="post" target="frame">
+<h2>Filter</h2>
+<h3>By Direct Reports</h3>
+<select name="mydirectreports" id="mydirectreports">
+    <option value="all" selected="selected">Show All</option>
+    {% for e in mydirectreports%}
+    <option value="e[0]">{{e[1]}} {{e[2]}} {{e[3]}}</option>
+    {% endfor %}
+</select>
+<h3>By Date</h3>
+<select name="payrollfortnight" id="payrollfortnight">
+    <optgroup label="Future"></optgroup>
+    {% for e in payroll_fortnight_future%}
+    <option value="e[0]">From {{e[1]}} to {{e[2]}}</option>
+    {% endfor %}
+    <optgroup label="Show All"></optgroup>
+    <option value="all" selected="selected">Show All</option>
+    <optgroup label="Current"></optgroup>
+    {% for e in payroll_fortnight_current%}
+    <option value="e[0]">From {{e[1]}} to {{e[2]}}</option>
+    {% endfor %}
+    <optgroup label="Past"></optgroup>
+    {% for e in payroll_fortnight_past%}
+    <option value="e[0]">From {{e[1]}} to {{e[2]}}</option>
+    {% endfor %}
+</select>
+<input type="submit" value="Search">
+</form>
+<br>
+<br>
+<br>
+
+<h2>Pending Approval</h2>
+{% for e in myapproval_pending%}
+    {% for i in e %}
+        {{i}},
+    {% endfor %}
+    <br>
+{% endfor %}
+<br>
+<br>
+<h2>Approved Request</h2>
+{% for e in myapproval_approved%}
+    {% for i in e %}
+        {{i}} 
+    {% endfor %}
+    <br>
+{% endfor %}
+    
+<iframe name="frame">
+    <h2>Pending Approval</h2>
+    {% for e in myapproval_pending%}
+        {% for i in e %}
+            {{i}},
+        {% endfor %}
+        <br>
+    {% endfor %}
+    <br>
+    <br>
+    <h2>Approved Request</h2>
+    {% for e in myapproval_approved%}
+        {% for i in e %}
+            {{i}} 
+        {% endfor %}
+        <br>
+    {% endfor %}
+
+</iframe>
+</div>
+
+
+{% endblock %}

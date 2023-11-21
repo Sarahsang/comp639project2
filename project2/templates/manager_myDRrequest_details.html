@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="main-container">
+    <div style="display: flex; justify-content: center; margin: 10px;">
+        <div>
+            <a style="margin-right:10px;" href="/manager/mydirectreports" class="customizedButton">My Direct Reports</a>
+            <a style="margin-right:10px;" href="/manager/request_log" class="customizedButton">Request Log</a>
+        </div>
+    </div>
+    <div class="LR-containerREPORT" style="height:75px; display:flex; flex-direction:column; ">
+        <h1 style="margin: auto; color:#242250; font-weight: 900; ">Request Details</h1>
+    </div>
+
+
+
+    <div style="margin-top:-30px;">
+        <div style="width:150%;">
+            <div class="LR-containerREPORT"
+                style="height:auto;width:50%; display:flex; align-items: center;justify-content:space-around; background-color: white;box-shadow: none; border: 1px solid rgb(214, 214, 214); overflow:auto; ">
+                <div style="width:100%; display:flex; flex-direction:column; align-items: center;">
+                    <table id="myTable">
+                        <tr>
+                            <th>Date Requested</th>
+                            <td>{{ request_details[2] }}</td>
+                        </tr>
+                        <tr>
+                            <th>Name</th>
+                            <td><a class="button-action centered-link" href="/manager/myDRdetail?id={{request_details[1]}}"> {{ request_details[3] }} {{ request_details[4] }}</td>
+                        </tr>
+                        <tr>
+                            <th>Status</th>
+                            <td>{{ request_details[5] }}</td>
+                        </tr>
+                        <tr>
+                            <th>Leave Type</th>
+                            <td>{{ request_details[6] }}</td>
+                        </tr>
+                        <tr>
+                            <th>Start Date</th>
+                            <td>{{ request_details[7] }}</td>
+                        </tr>
+                        <tr>
+                            <th>End Date</th>
+                            <td>{{ request_details[8] }}</td>
+                        </tr>
+                        <tr>
+                            <th>Days Requested</th>
+                            <td>{{ request_details[9] }}</td>
+                        </tr>
+                        <tr>
+                            <th>Hours Requested</th>
+                            <td>{{ request_details[17] }}</td>
+                        </tr>
+                        <tr>
+                            <th>Annual Leave Balance(hr)</th>
+                            <td><a class="button-action centered-link"
+                                href="/manager/myDRLeaveBalance?id={{request_details[1]}}"> {{ request_details[10] }}</td>
+                        </tr>
+                        <tr>
+                            <th>Sick Leave Balance(hr)</th>
+                            <td><a class="button-action centered-link"
+                                href="/manager/myDRLeaveBalance?id={{request_details[1]}}"> {{ request_details[11] }}</td>
+                        </tr>
+                        <tr>
+                            <th>Reason for Request</th>
+                            <td>{{ request_details[13] }}</td>
+                        </tr>
+                        <tr>
+                            {% if request_details[14] != None %}
+                            <th>Reason for withdraw</th>
+                            <td>{{ request_details[14] }}</td>
+                            {% endif %}
+                        </tr>
+                        <tr>
+                            {% if request_details[15] != None %}
+                            <th>Reason for Rejection</th>
+                            <td>{{ request_details[15] }}</td>
+                            {% endif %}
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="flashes">
+                {% for message in messages %}
+                    <div class="flash">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+{% if request_details[20] == 0 %}
+<div class="LR-containerREPORT" style="height:75px; width:85%; margin-left:5%; display:flex; justify-content: space-evenly; ">
+    
+    <!-- for the manager to approve the leave request -->
+    {% if request_details[1] != session['id'] %}
+    <form id="approveForm" method="POST" action="/approve_leave">
+        <input type="hidden" name="request_id" value="{{ request_details[0] }}">
+        <input type="hidden" name="manager_id" value="{{ request_details[16] }}">
+        <input type="hidden" name="start_date" value="{{ request_details[7] }}">
+        {% if request_details[5] == 'pending' %}
+        <button type="submit" class="btn button-action">Approve</button>
+        {% endif %}
+    </form>
+
+    <!-- for the manager to edit a leave request, redirects to edit leave page -->
+    {% if request_details[5] == 'pending' or request_details[5] == 'draft' %}
+    <a role="button" class="btn button-action" href="/applyLeave?uid={{request_details[1]}}&rid={{request_details[0]}}&type={{request_details[6]}}&start={{request_details[18]}}&end={{request_details[19]}}&edit=1&purl={{request.url}}">Edit</a> 
+    {% endif %}
+
+    <!-- for the manager to reject a leave request -->
+    <form id="rejectForm" method="POST" action="/manager/reject_leave">
+        {% if request_details[5] == 'pending' %}
+        <input type="hidden" name="request_id" value="{{ request_details[0] }}">
+        <input type="text" class="input-field" name="comment_rejected" placeholder="Reason for rejection" required>
+        <button type="submit" class="btn button-action">Reject</button>
+        {% endif %}
+    </form>
+
+    <!-- for the manager to delete a leave request -->
+    <form id="deleteForm" method="POST" action="/manager/withdraw_leave">
+        {% if request_details[5] == 'pending' %}
+        <input type="hidden" name="request_id" value="{{ request_details[0] }}">
+        <input type="text" class="input-field" name="comment_withdrawn" placeholder="Reason for withdraw" required>
+        <button type="submit" class="btn button-action">Withdraw</button>
+        {% endif %}
+    </form>
+
+    <!-- for the manager to undo a leave request -->
+    <form id="undoForm" method="POST" action="/manager/undo_leave">
+        <input type="hidden" name="request_id" value="{{ request_details[0] }}">
+        <input type="hidden" name="manager_id" value="{{ request_details[16] }}">
+        <input type="hidden" name="start_date" value="{{ request_details[7] }}">
+        {% if request_details[5] != 'pending' %}
+        <button type="submit" class="btn button-action">Undo</button>
+        {% endif %}
+    </form>
+    {% endif %}
+</div>
+{% endif %}
+
+
+{% endblock %}

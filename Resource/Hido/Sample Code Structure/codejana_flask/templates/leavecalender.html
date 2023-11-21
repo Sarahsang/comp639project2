@@ -1,0 +1,392 @@
+<head>
+    <!-- reference Moment.js library --> <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" type="text/javascript"></script>
+    <!-- reference jQuery library --> <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <script>
+            //EXTERNAL JS USED - jQuery, moment.js
+        
+        var $startDate = moment().startOf("year");
+        var $endDate = moment($startDate).add(12, "M").add(-1, "days");
+        var $totalDays = moment($endDate).diff($startDate, "days");
+        var $today = moment().dayOfYear();
+        
+        function buildCalendar() {
+        var monthList = "",
+            yesterday,
+            daysRow,
+            month,
+            date,
+            days,
+            day;
+        var i, j;
+        
+        // Define Months
+        var days = ["S", "M", "T", "W", "T", "F", "S"];
+        var months = [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June",
+            "July",
+            "August",
+            "September",
+            "October",
+            "November",
+            "December"
+        ];
+        
+        // Build calendar
+        var startDate = moment($startDate); // Set reference date to start of year
+        
+        // Build weekday name row - hidden on mobile
+        daysRow = "<div class='days'>";
+        for (var i = 0; i < 37; i++) {
+            day = startDate.date();
+            daysRow += "<span>" + days[i % 7] + "</span>";
+        }
+        daysRow += "</div>";
+        
+        for (var i = 0; i <= $totalDays; i++) {
+            date = startDate.date(); // Get start date
+            day = startDate.day(); // Get start day of the week
+        
+            if (date == 1) {
+            // If it's the first of the month
+            monthList += "</ul></div>"; // End month div
+            monthList +=
+                "<div class='month'><span class='months'>" +
+                months[startDate.month()] +
+                "</span><ul class='month-list'>"; // Add new month div
+        
+            for (j = 0; j < day; j++) {
+                monthList += "<li></li>"; // Add blank list items for padding
+            }
+            }
+        
+            monthList +=
+            "<li class='weekday' id='day" +
+            date +
+            "' data-wkdy='" +
+            days[startDate.day()] +
+            "'><span class='text'>" +
+            date +
+            "</span></li>"; // Build the days
+            yesterday = date;
+            startDate.add(1, "d");
+        }
+        
+        $(".leaveCalendar").html(daysRow + monthList);
+        $("div.days span:contains(S)").addClass("weekend");
+        $('li[id^="day"]')
+            .eq($today - 1)
+            .addClass("today");
+        $(".leaveCalendar")
+            .find("[data-wkdy='S']")
+            .removeClass("weekday")
+            .addClass("weekend");
+        }
+        
+        function addData() {
+        // Data
+        var results = [
+            {
+            reason: "Sickness",
+            startDate: "2023-02-06",
+            endDate: "2023-02-07"
+            },
+            {
+            reason: "Approved Holiday",
+            startDate: "2023-03-16",
+            endDate: "2023-03-25"
+            },
+            {
+            reason: "Pending Holiday",
+            startDate: "2023-08-06",
+            endDate: "2023-08-17"
+            },
+            {
+            reason: "Lateness",
+            startDate: "2023-07-06",
+            endDate: "2023-07-06"
+            },
+            {
+            reason: "Declined Holiday",
+            startDate: "2023-10-23",
+            endDate: "2023-10-27"
+            }
+        ];
+        
+        var i, j;
+        
+        for (var i = 0; i < results.length; i++) {
+            var obj = results[i];
+            absenceReason = obj.reason.replace(/\s+/g, "-").toLowerCase(); // Convert to CSS class
+            startDate = moment(obj.startDate).diff($startDate, "day");
+            endDate = moment(obj.endDate).diff($startDate, "day");
+        
+            for (var j = startDate; j <= endDate; j++) {
+            $('li[id^="day"]').eq(j).addClass(absenceReason);
+            }
+        }
+        }
+        
+        $(function () {
+        buildCalendar();
+        addData();
+        });
+    </script>
+
+</head>
+
+<body>
+ 
+<h1>My Leave Calendar</h1>
+<ul class="key" id="chartkey">
+  <li class="pending-holiday"><a href="#/" data-target="pending-holiday">Pending Holiday</a></li>
+  <li class="approved-holiday"><a href="#/" data-target="approved-holiday">Approved Holiday</a></li>
+  <li class="declined-holiday"><a href="#/" data-target="declined-holiday">Declined Holiday</a></li>
+  <li class="pending-other"><a href="#/" data-target="pending-other">Pending Other</a></li>
+  <li class="approved-other"><a href="#/" data-target="approved-other">Approved Other</a></li>
+  <li class="declined-other"><a href="#/" data-target="declined-other">Declined Other</a></li>
+  <li class="sickness"><a href="#/" data-target="sickness">Sickness</a></li>
+  <li class="lateness"><a href="#/" data-target="lateness">Lateness</a></li>
+</ul>
+<div class="leaveCalendar"></div>
+</body>
+
+<style>
+    @import url(https://fonts.googleapis.com/css?family=Open+Sans:300|Ubuntu:300,500);
+.key li a:hover {
+  text-decoration: none;
+  opacity: 0.7;
+  transition: 0.2s ease;
+  cursor: pointer;
+}
+
+.today:hover, .weekend:hover {
+  transform: none;
+  cursor: not-allowed;
+  font-weight: normal;
+}
+
+body {
+  font-family: "Open Sans";
+  font-size: 13px;
+  padding: 0 0 50px 0;
+}
+
+h1 {
+  font-family: "Ubuntu";
+  color: #3333FF !important;
+  font-weight: 500;
+}
+
+.key {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-column-gap: 0.5rem;
+  padding: 0;
+  margin: 0;
+  padding-top: 1rem;
+  list-style: none;
+  border-top: dashed 1px rgba(0, 0, 0, 0.1);
+}
+.key li {
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-family: "Ubuntu";
+  font-size: 0.7rem;
+}
+.key li a {
+  color: #fff;
+  text-decoration: none;
+}
+.key .bankhol {
+  background: rgba(229, 20, 0, 0.1);
+}
+.key .today {
+  outline: solid 2px #3333ff;
+}
+
+@media (min-width: 568px) {
+  .key {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+@media (min-width: 1200px) {
+  .key {
+    grid-template-columns: repeat(8, 1fr);
+    margin-bottom: 1rem;
+  }
+  .key li {
+    margin-bottom: 0;
+  }
+}
+.leaveCalendar {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 1rem;
+}
+.leaveCalendar div.days {
+  display: none;
+}
+.leaveCalendar div.month {
+  padding-top: 1rem;
+  margin-top: 1rem;
+  border-top: dashed 1px #3333FF;
+}
+.leaveCalendar span.months {
+  font-size: 1rem;
+  color: #3333FF;
+  display: block;
+  margin-bottom: 1rem;
+}
+.leaveCalendar ul.month-list {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-gap: 0.25rem;
+  padding: 0;
+  margin: 0;
+}
+.leaveCalendar ul.month-list li {
+  list-style-type: none;
+  position: relative;
+  display: block;
+  width: 100%;
+  height: auto;
+  padding-bottom: 100%;
+  border-radius: 50%;
+  margin-bottom: 0.2rem;
+}
+.leaveCalendar ul.month-list li span.text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.7rem;
+}
+
+@media (min-width: 568px) {
+  .leaveCalendar {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .leaveCalendar ul.month-list li span.text {
+    font-size: 1rem;
+  }
+}
+@media (min-width: 1200px) {
+  .leaveCalendar {
+    grid-template-columns: repeat(1, 1fr);
+    grid-gap: 0;
+  }
+  .leaveCalendar div.days {
+    display: grid;
+    grid-template-columns: repeat(37, 1fr);
+    grid-gap: 0.25rem;
+    margin-left: 100px;
+    margin-bottom: 0.5rem;
+  }
+  .leaveCalendar div.days span {
+    padding: 0.25rem 0.1rem;
+    display: block;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 50%;
+  }
+  .leaveCalendar div.month {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
+    padding: 0.5rem 0;
+    position: relative;
+  }
+  .leaveCalendar div.month:nth-of-type(2n) {
+    background: rgba(0, 0, 0, 0.03);
+  }
+  .leaveCalendar span.months {
+    position: absolute;
+    top: 50%;
+    left: 1rem;
+    transform: translateY(-50%);
+  }
+  .leaveCalendar ul.month-list {
+    grid-template-columns: repeat(37, 1fr);
+    margin-left: 100px;
+  }
+}
+.weekday {
+  transition: 0.2s ease;
+}
+.weekday:hover {
+  cursor: pointer;
+  font-weight: bold;
+  transform: scale(1.2);
+  background: #3333FF;
+  border-radius: 3px;
+  color: #fff;
+}
+
+.weekend {
+  background: rgba(0, 0, 0, 0.05);
+  color: rgba(0, 0, 0, 0.5);
+}
+.today {
+  border: solid 2px #3333FF;
+}
+.key .pending-holiday,
+.leaveCalendar .pending-holiday {
+  background: linear-gradient(45deg, #6666FF 25%, #3333FF 25%, #3333FF 50%, #6666FF 50%, #6666FF 75%, #3333FF 75%, #3333FF);
+  color: #fff;
+  animation: progress 1s linear infinite;
+  background-size: 30px 30px;
+  opacity: 0.7;
+}
+.key .approved-holiday,
+.leaveCalendar .approved-holiday {
+  background-color: #3333FF;
+  color: #fff;
+}
+.key .declined-holiday,
+.leaveCalendar .declined-holiday {
+  background-color: #6e458d;
+  color: #fff;
+}
+.key .lateness,
+.leaveCalendar .lateness {
+  background-color: #f0ad4e;
+  color: #fff;
+}
+.key .sickness,
+.leaveCalendar .sickness {
+  background-color: #5cb85c;
+  color: #fff;
+}
+.key .pending-other,
+.leaveCalendar .pending-other {
+  background: linear-gradient(45deg, #0000FF 25%, #6666FF 25%, #6666FF 50%, #0000FF 50%, #0000FF 75%, #6666FF 75%, #6666FF);
+  color: #fff;
+  animation: progress 1s linear infinite;
+  background-size: 30px 30px;
+  opacity: 0.7;
+}
+.key .approved-other,
+.leaveCalendar .approved-other {
+  background-color: #6666FF;
+}
+.key .declined-other,
+.leaveCalendar .declined-other {
+  background-color: #956ab5;
+}
+
+@keyframes progress {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 60px 30px;
+  }
+}
+</style>
+

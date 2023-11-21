@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<div class="main-container">
+    <button type = "button" class="button-back btn" onclick="history.back()" hidden>Back</button>
+    <br>
+
+
+
+    <div class="LR-container" style="background-color:#fbfbfb; box-shadow: none;" >
+        <a style="margin: 15px auto;border-style: none;height:40px;" class="customizedButton" href="/admin_holiday?year={{search_year}}&addnew">Add New Holiday</a>
+        </div>
+
+    <table class="table table-hover">
+        
+        <div style="display:flex;">
+        <a style href="/admin_holiday?year={{search_year-1}}">◀</a> 
+        <h1 style="text-align:center;">Holiday {{search_year}}</h1>
+        <a style href="/admin_holiday?year={{search_year+1}}">▶</a> 
+        </div>
+        <tr><th>Date</th><th>Holiday Description</th><th>Is Holiday</th><th>Action</th></tr>
+        {% if "addnew" in request.url %}
+            <tr>
+                <form method="POST" action="/admin_holiday?year={{search_year}}">
+                    <td><input name="newdate" id="newdate" placeholder="YYYY-MM-DD" required></input></td>
+                    <td><input name="newdescription" id="newdescription" required></input></td>
+                    <td><select name="neweligibility" id="neweligibility" required>
+                            <option value="1" selected>True</option>
+                            <option value="0">False</option>
+                    </select></td>
+                    <td>
+                        <a style="margin-right:20px; margin-bottom: 20px;" onclick="history.back()" class="customizedButton">Back</a>
+                        <input style="margin-right:20px; margin-bottom: 20px;" type="submit"  class="customizedButton" value="Save"></input>
+                    </td>
+                </form>
+            </tr>
+        {% else %}
+            {% for i in check_holiday %}
+                {% if "edit" in request.url %}
+                    {% if i[0] == holiday_id %}
+                        <tr>
+                            <form method="POST" action="/admin_holiday?year={{search_year}}">
+                                <input name="id" id="id" value="{{i[0]}}" hidden></input>
+                                <td><input name="date" id="date" value="{{i[1]}}"></input></td>
+                                <td><input name="description" id="description" value="{{i[2]}}"></input></td>
+                                <td><select name="eligibility" id="eligibility">
+                                    {% if i[3] == 1 %}
+                                        <option value="1" selected>True</option>
+                                        <option value="0">False</option>
+                                    {% else %}
+                                        <option value="1">True</option>
+                                        <option value="0" selected>False</option>
+                                    {% endif %}
+                                </select></td>
+                                <td>
+                                    <a style="margin-right:20px; margin-bottom: 20px;" href="/admin_holiday?year={{search_year}}" class="customizedButton">Leave as is</a>
+                                    <input style="margin-right:20px; margin-bottom: 20px;" type="submit"  class="customizedButton" value="Save Update"></input>
+                                </td>
+                            </form>
+                        </tr>
+                    {% else %}
+                        <tr><form method="POST" action="/admin_holiday">
+                            <td>{{i[1]}}</td>
+                            <td>{{i[2]}}</td>
+                            <td>
+                                {% if i[3] == 1 %}
+                                    True
+                                {% else %}
+                                    False
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a style="margin-right:20px; margin-bottom: 20px;" href="/admin_holiday?year={{search_year}}&hid={{i[0]}}&edit=1" class="customizedButton">Edit</a>
+                                <a style="margin-right:20px; margin-bottom: 20px;" href="/admin_holiday?year={{search_year}}&hid={{i[0]}}&delete=1" class="customizedButton">Delete</a>
+                            </td>
+                        </form></tr>
+                    {% endif %}
+                {% else %}
+                    <tr><form method="POST" action="/admin_holiday">
+                        <td>{{i[1]}}</td>
+                        <td>{{i[2]}}</td>
+                        <td>
+                            {% if i[3] == 1 %}
+                                True
+                            {% else %}
+                                False
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a style="margin-right:20px; margin-bottom: 20px;" href="/admin_holiday?year={{search_year}}&hid={{i[0]}}&edit=1" class="customizedButton">Edit</a>
+                            <a style="margin-right:20px; margin-bottom: 20px;" href="/admin_holiday?year={{search_year}}&hid={{i[0]}}&delete=1" class="customizedButton">Delete</a>
+                        </td>
+                    </form></tr>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+        </table>
+
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div  class="LR-container"  style="height:75px; display:flex; flex-direction:column; " >
+    <h1 style="margin:10px auto; color:#242250; font-weight: 900; ">Organization Chart</h1>
+    <div style="margin:-10px auto;color:#2D49E8;font-weight: bold;" >
+        <span></span>
+        <span></span>
+    </div>
+</div>
+<div style="margin-top:-30px;">
+    <div style="width:120%;" >
+        <div  class="LR-container"  style="display:flex; align-items: center;justify-content:space-around; font-size:14px; width:50%;height:35px;color:black;margin-bottom: -50px;" >
+            <p style="margin-top:12px;">Manager</p>
+        </div>
+
+        <div  class="LR-container"  style="width:50%; height:auto; background-color: white;box-shadow: none; border: 1px solid rgb(214, 214, 214);" >
+            <div style="display:inline;">
+                <div style="text-align: left;"><span style="color:#2D49E8; font-size: 14px; font-weight: 400;" >{{allemployee_orgchart_dict[1][8]}}</span></div>
+                <div style="text-align: left;" ><span style="color:#2D49E8; font-size: 14px; font-weight: 400;" >{{allemployee_orgchart_dict[1][3]}}. {{allemployee_orgchart_dict[1][4]}}  {{allemployee_orgchart_dict[1][5]}}</span></div> 
+
+                {% for employee in orgchart_manager[1] %}
+                <div style="display:inline;">
+                    <div  class="LR-container"  style="display:block; margin-left: 50px; width:auto; height:auto; background-color: white;box-shadow: none; border: 1px solid rgb(214, 214, 214);" >
+                        <div style="text-align: left;"><span style="color:#2D49E8; font-size: 14px; font-weight: 400;" >{{allemployee_orgchart_dict[employee][8]}}</span></div>
+                        <div style="text-align: left;" ><span style="color:#2D49E8; font-size: 14px; font-weight: 400;" >{{allemployee_orgchart_dict[employee][3]}}. {{allemployee_orgchart_dict[employee][4]}}  {{allemployee_orgchart_dict[employee][5]}}</span></div> 
+                        {% for i in orgchart_manager[employee] %}
+                            {% if i == 1 %}
+                            {% else %}
+                            <div style="width:fit-content; display:inline; flex-direction:column; ">
+                                <div  class="LR-container"  style="display:block; margin-left: 50px; width:auto; height:auto;background-color: white;box-shadow: none; border: 1px solid rgb(214, 214, 214);" >
+                                    <div style="text-align: left;"><span style="color:#2D49E8; font-size: 14px; font-weight: 400;" >{{allemployee_orgchart_dict[i][8]}}</span></div>
+                                    <div style="text-align: left;" ><span style="color:#2D49E8; font-size: 14px; font-weight: 400;" >{{allemployee_orgchart_dict[i][3]}}. {{allemployee_orgchart_dict[i][4]}}  {{allemployee_orgchart_dict[i][5]}}</span></div> 
+                                    {% for j in orgchart_manager[i] %}
+                                        <div style="width:fit-content; display:inline; flex-direction:column; ">
+                                            <div  class="LR-container"  style="display:block; margin-left: 50px; width:auto; height:auto;  background-color: white;box-shadow: none; border: 1px solid rgb(214, 214, 214);" >
+                                                <div style="text-align: left;"><span style="color:#2D49E8; font-size: 14px; font-weight: 400;" >{{allemployee_orgchart_dict[j][8]}}</span></div>
+                                                <div style="text-align: left;" ><span style="color:#2D49E8; font-size: 14px; font-weight: 400;" >{{allemployee_orgchart_dict[j][3]}}. {{allemployee_orgchart_dict[j][4]}}  {{allemployee_orgchart_dict[j][5]}}</span></div> 
+                                                {% for k in orgchart_manager[j] %}
+                                                <div style="width:fit-content; display:inline; flex-direction:column; ">
+                                                    <div  class="LR-container"  style="display:block; margin-left: 50px; width:auto; height:auto; background-color: white;box-shadow: none; border: 1px solid rgb(214, 214, 214);" >
+                                                    <div style="text-align: left;"><span style="color:#2D49E8; font-size: 14px; font-weight: 400;" >{{allemployee_orgchart_dict[k][8]}}</span></div>
+                                                    <div style="text-align: left;" ><span style="color:#2D49E8; font-size: 14px; font-weight: 400;" >{{allemployee_orgchart_dict[k][3]}}. {{allemployee_orgchart_dict[k][4]}}  {{allemployee_orgchart_dict[k][5]}}</span></div> 
+                                                    </div>
+                                                </div>
+                                                {% endfor %}
+                                            </div> 
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="margin-top:-30px;">
+    <div style="width:120%;" >
+        <div  class="LR-container"  style="display:flex; align-items: center;justify-content:space-around; font-size:14px; width:50%;height:35px;color:black;margin-bottom: -50px;" >
+            <p style="margin-top:12px;">supervisor</p>
+        </div>
+
+        <div  class="LR-container"  style="width:50%; height:auto; background-color: white;box-shadow: none; border: 1px solid rgb(214, 214, 214);" >
+            <div style="display:inline;">
+                <div style="text-align: left;"><span style="color:#2D49E8; font-size: 14px; font-weight: 400;" >{{allemployee_orgchart_dict[1][8]}}</span></div>
+                <div style="text-align: left;" ><span style="color:#2D49E8; font-size: 14px; font-weight: 400;" >{{allemployee_orgchart_dict[1][3]}}. {{allemployee_orgchart_dict[1][4]}}  {{allemployee_orgchart_dict[1][5]}}</span></div> 
+
+                {% for employee in orgchart_supervisor[1] %}
+                <div style="display:inline;">
+                    <div  class="LR-container"  style="display:block; margin-left: 50px; width:auto; height:auto; background-color: white;box-shadow: none; border: 1px solid rgb(214, 214, 214);" >
+                        <div style="text-align: left;"><span style="color:#2D49E8; font-size: 14px; font-weight: 400;" >{{allemployee_orgchart_dict[employee][8]}}</span></div>
+                        <div style="text-align: left;" ><span style="color:#2D49E8; font-size: 14px; font-weight: 400;" >{{allemployee_orgchart_dict[employee][3]}}. {{allemployee_orgchart_dict[employee][4]}}  {{allemployee_orgchart_dict[employee][5]}}</span></div> 
+                        {% for i in orgchart_supervisor[employee] %}
+                            {% if i == 1 %}
+                            {% else %}
+                            <div style="width:fit-content; display:inline; flex-direction:column; ">
+                                <div  class="LR-container"  style="display:block; margin-left: 50px; width:auto; height:auto;background-color: white;box-shadow: none; border: 1px solid rgb(214, 214, 214);" >
+                                    <div style="text-align: left;"><span style="color:#2D49E8; font-size: 14px; font-weight: 400;" >{{allemployee_orgchart_dict[i][8]}}</span></div>
+                                    <div style="text-align: left;" ><span style="color:#2D49E8; font-size: 14px; font-weight: 400;" >{{allemployee_orgchart_dict[i][3]}}. {{allemployee_orgchart_dict[i][4]}}  {{allemployee_orgchart_dict[i][5]}}</span></div> 
+                                    {% for j in orgchart_supervisor[i] %}
+                                        <div style="width:fit-content; display:inline; flex-direction:column; ">
+                                            <div  class="LR-container"  style="display:block; margin-left: 50px; width:auto; height:auto;  background-color: white;box-shadow: none; border: 1px solid rgb(214, 214, 214);" >
+                                                <div style="text-align: left;"><span style="color:#2D49E8; font-size: 14px; font-weight: 400;" >{{allemployee_orgchart_dict[j][8]}}</span></div>
+                                                <div style="text-align: left;" ><span style="color:#2D49E8; font-size: 14px; font-weight: 400;" >{{allemployee_orgchart_dict[j][3]}}. {{allemployee_orgchart_dict[j][4]}}  {{allemployee_orgchart_dict[j][5]}}</span></div> 
+                                                {% for k in orgchart_supervisor[j] %}
+                                                <div style="width:fit-content; display:inline; flex-direction:column; ">
+                                                    <div  class="LR-container"  style="display:block; margin-left: 50px; width:auto; height:auto; background-color: white;box-shadow: none; border: 1px solid rgb(214, 214, 214);" >
+                                                    <div style="text-align: left;"><span style="color:#2D49E8; font-size: 14px; font-weight: 400;" >{{allemployee_orgchart_dict[k][8]}}</span></div>
+                                                    <div style="text-align: left;" ><span style="color:#2D49E8; font-size: 14px; font-weight: 400;" >{{allemployee_orgchart_dict[k][3]}}. {{allemployee_orgchart_dict[k][4]}}  {{allemployee_orgchart_dict[k][5]}}</span></div> 
+                                                    </div>
+                                                </div>
+                                                {% endfor %}
+                                            </div> 
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

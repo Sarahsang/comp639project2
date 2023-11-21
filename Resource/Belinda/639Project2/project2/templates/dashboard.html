@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="container">
+    <h1>Dashboard</h1>
+    {% if session['employee_type'] == 'admin' %}
+      <h2>Welcome, admin!</h2>
+      <p>You have access to all features of the leave management system.</p>
+    {% elif session['employee_type'] == 'approval_manager' %}
+      <h2>Welcome, approval manager!</h2>
+      <p>You can approve or reject leave requests from employees.</p>
+    {% else %}
+      <h2>Welcome, employee!</h2>
+      <p>You can request leave and view the status of your requests.</p>
+    {% endif %}
+  </div>
+{% endblock %}
